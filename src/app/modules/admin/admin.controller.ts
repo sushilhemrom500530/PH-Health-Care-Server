@@ -1,25 +1,26 @@
+import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
+import { adminService } from "./admin.service";
+
+const prisma = new PrismaClient();
 
 
-const createAdmin = async (req: Request, res: Response) => {
+const getAllFromDB = async (req: Request, res: Response) => {
     try {
-        // console.log(req.body)
-        const result = await userService.createAdmin(req.body);
+        const result = await adminService.getAllFromDB();
         res.status(200).json({
-            seccess: true,
-            messaga: "Admin Created successfully",
+            success: true,
+            message: "Admin retrive successfully",
             data: result
         })
     } catch (error: any) {
-        console.log(error)
         res.status(500).json({
             success: false,
             message: error?.name || "Something went wrong!",
-            error
+            data: error
         })
     }
 }
-
-export const userController = {
-    createAdmin
+export const adminController = {
+    getAllFromDB
 }
