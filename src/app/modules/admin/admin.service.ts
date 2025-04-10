@@ -1,4 +1,4 @@
-import { Admin, Prisma } from "@prisma/client";
+import { Admin, Prisma, UserStatus } from "@prisma/client";
 import { adminSearchAbleField } from "./admin.constant";
 import calculatePagination from "../../../helpers/paginationHelper";
 import prisma from "../../../shared/prisma";
@@ -108,22 +108,62 @@ const updateAdmin = async (id: string, updateData: Partial<Admin>) => {
 }
 
 const deletedAdmin = async (id: string) => {
+
+    await prisma.admin.findFirstOrThrow({
+        where: {
+            id
+        }
+    })
+
     const result = await prisma.$transaction(async (transactionClient) => {
         const deletedAdminData = await transactionClient.admin.delete({
             where: {
                 id
             }
         });
-        const userDeletedData = await transactionClient.user.delete({
+        await transactionClient.user.delete({
             where: {
                 email: deletedAdminData.email
             }
         })
+        return deletedAdminData;
     })
+    return result;
+}
+
+const softDeletedAdmin = async (id: string) => {
+
+    await prisma.admin.findFirstOrThrow({
+        where: {
+            id
+        }
+    })
+
+    const result = await prisma.$transaction(async (transactionClient) => {
+        const deletedAdminData = await transactionClient.admin.update({
+            where: {
+                id
+            },
+            data: {
+                isDeleted: true
+            }
+        });
+        await transactionClient.user.update({
+            where: {
+                email: deletedAdminData.email
+            },
+            data: {
+                status: UserStatus.DELETED
+            }
+        })
+        return deletedAdminData;
+    })
+    return result;
 }
 export const adminService = {
     getAllFromDB,
     getSingleDataById,
     updateAdmin,
-    deletedAdmin
+    deletedAdmin,
+    softDeletedAdmin
 }
