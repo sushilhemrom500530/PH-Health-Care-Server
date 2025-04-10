@@ -46,7 +46,27 @@ const getSingleDataById = async (req: Request, res: Response) => {
         })
     }
 }
+
+const updateAdmin = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const updateData = req.body;
+    try {
+        const result = await adminService.updateAdmin(id, updateData);
+        res.status(200).json({
+            success: true,
+            message: "Admin updated successfully",
+            data: result
+        })
+    } catch (error: any) {
+        res.status(500).json({
+            success: false,
+            message: error?.name || "Something went wrong!",
+            data: error
+        })
+    }
+}
 export const adminController = {
     getAllFromDB,
-    getSingleDataById
+    getSingleDataById,
+    updateAdmin,
 }
