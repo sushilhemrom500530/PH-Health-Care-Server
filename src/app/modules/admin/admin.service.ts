@@ -50,6 +50,9 @@ const getAllFromDB = async (params: any, options: any) => {
         })
     }
 
+    andConditions.push({
+        isDeleted: false
+    })
 
     // console.dir(andConditions, { depth: "inifinity" })
 
@@ -81,21 +84,23 @@ const getAllFromDB = async (params: any, options: any) => {
 }
 
 
-const getSingleDataById = async (id: string) => {
+const getSingleDataById = async (id: string): Promise<Admin | null> => {
     const result = await prisma.admin.findUnique({
         where: {
-            id
+            id,
+            isDeleted: false
         }
     })
     return result;
 }
 
 
-const updateAdmin = async (id: string, updateData: Partial<Admin>) => {
+const updateAdmin = async (id: string, updateData: Partial<Admin>): Promise<Admin | null> => {
     // console.log("Admin updated successfully", id, updateData)
     await prisma.admin.findFirstOrThrow({
         where: {
-            id
+            id,
+            isDeleted: false
         }
     })
     const result = await prisma.admin.update({
@@ -107,7 +112,7 @@ const updateAdmin = async (id: string, updateData: Partial<Admin>) => {
     return result;
 }
 
-const deletedAdmin = async (id: string) => {
+const deletedAdmin = async (id: string): Promise<Admin | null> => {
 
     await prisma.admin.findFirstOrThrow({
         where: {
@@ -131,11 +136,12 @@ const deletedAdmin = async (id: string) => {
     return result;
 }
 
-const softDeletedAdmin = async (id: string) => {
+const softDeletedAdmin = async (id: string): Promise<Admin | null> => {
 
     await prisma.admin.findFirstOrThrow({
         where: {
-            id
+            id,
+            isDeleted: false
         }
     })
 
