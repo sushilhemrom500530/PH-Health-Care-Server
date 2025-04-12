@@ -4,12 +4,12 @@ import pick from "../../../shared/pick";
 import { adminFilterAbleFields, adminPaginationAndSort } from "./admin.constant";
 import sendResponse from "../../../shared/sentResponse";
 import status from "http-status";
-import catchAsync from "../../../helpers/catchAsync";
+import catchAsync from "../../../shared/catchAsync";
 
 
 
 
-const getAllFromDB = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+const getAllFromDB = catchAsync(async (req: Request, res: Response) => {
     const filters = await pick(req.query, adminFilterAbleFields)
     const options = await pick(req.query, adminPaginationAndSort)
     // console.log({ options })
@@ -26,7 +26,7 @@ const getAllFromDB = catchAsync(async (req: Request, res: Response, next: NextFu
 
 
 
-const getSingleDataById = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+const getSingleDataById = catchAsync(async (req: Request, res: Response) => {
     const { id } = req.params;
     const result = await adminService.getSingleDataById(id);
     sendResponse(res, {
@@ -37,7 +37,7 @@ const getSingleDataById = catchAsync(async (req: Request, res: Response, next: N
     })
 })
 
-const updateAdmin = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+const updateAdmin = catchAsync(async (req: Request, res: Response) => {
     const { id } = req.params;
     const updateData = req.body;
 
@@ -50,7 +50,7 @@ const updateAdmin = catchAsync(async (req: Request, res: Response, next: NextFun
     })
 })
 
-const deletedAdmin = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+const deletedAdmin = catchAsync(async (req: Request, res: Response) => {
     const { id } = req.params;
     const result = await adminService.deletedAdmin(id);
     sendResponse(res, {
@@ -61,7 +61,7 @@ const deletedAdmin = catchAsync(async (req: Request, res: Response, next: NextFu
     })
 })
 
-const softDeletedAdmin = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+const softDeletedAdmin = catchAsync(async (req: Request, res: Response) => {
     const { id } = req.params;
     const result = await adminService.softDeletedAdmin(id);
     sendResponse(res, {

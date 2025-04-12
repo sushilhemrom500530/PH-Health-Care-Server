@@ -2,10 +2,12 @@ import { Admin, Prisma, UserStatus } from "@prisma/client";
 import { adminSearchAbleField } from "./admin.constant";
 import calculatePagination from "../../../helpers/paginationHelper";
 import prisma from "../../../shared/prisma";
+import { TAdminSearchField } from "./admin.interface";
+import { TPaginationOptions } from "../../interfaces/pagination";
 
 
 
-const getAllFromDB = async (params: any, options: any) => {
+const getAllFromDB = async (params: TAdminSearchField, options: TPaginationOptions) => {
     const { searchTerm, ...filterData } = params;
     const { page, limit, skip, } = calculatePagination(options);
     const andConditions: Prisma.AdminWhereInput[] = [];
@@ -97,7 +99,7 @@ const getSingleDataById = async (id: string): Promise<Admin | null> => {
 
 const updateAdmin = async (id: string, updateData: Partial<Admin>): Promise<Admin | null> => {
     // console.log("Admin updated successfully", id, updateData)
-    await prisma.admin.findFirstOrThrow({
+    await prisma.admin.findUniqueOrThrow({
         where: {
             id,
             isDeleted: false
