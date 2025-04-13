@@ -1,7 +1,9 @@
 import prisma from "../../../shared/prisma"
 import * as bcrypt from "bcrypt"
 import { jwtHelpers } from './../../../helpers/jwtHelpers';
-import jwt, { JwtPayload } from "jsonwebtoken";
+import jwt, { JwtPayload, Secret } from "jsonwebtoken";
+import { UserStatus } from "@prisma/client";
+import config from "../../../config";
 
 
 
@@ -11,72 +13,70 @@ const loginUser = async (payload: {
 }) => {
     const userData = await prisma.user.findUniqueOrThrow({
         where: {
-            email: payload.email
+            email: payload.email,
+            status: UserStatus.ACTIVE
         }
-    })
-    // console.log("Logged in user....", userData)
+    });
+
     const isCorrectPassword: boolean = await bcrypt.compare(payload.password, userData.password);
-    console.log("is correct password", isCorrectPassword)
+
     if (!isCorrectPassword) {
         throw new Error("Password incorrect!")
     }
+    const accessToken = jwtHelpers.generateToken({
+        email: userData.email,
+        role: userData.role
+    },
+        config.jwt.jwt_secret as Secret,
+        config.jwt.expires_in as string
+    );
 
-    const accessToken = jwtHelpers.generateToken(
-        {
-            email: userData.email,
-            role: userData.role
-        },
-        "abcdefghij",
-        "5m"
-    )
-
-    const refreshToken = jwtHelpers.generateToken(
-        {
-            email: userData.email,
-            role: userData.role
-        },
-        "abcdefghijjhjh",
-        "30d"
-    )
-
-    console.log({ accessToken })
+    const refreshToken = jwtHelpers.generateToken({
+        email: userData.email,
+        role: userData.role
+    },
+        config.jwt.refresh_token_secret as Secret,
+        config.jwt.refresh_token_expires_in as string
+    );
 
     return {
         accessToken,
-        needPasswordChange: userData.needPasswordChange,
-        refreshToken
+        refreshToken,
+        needPasswordChange: userData.needPasswordChange
     };
-}
+};
 
 const refreshToken = async (token: string) => {
-    // console.log("refresh token:", token)
     let decodedData;
     try {
-        decodedData = jwt.verify(token, "abcdefghijjhjh") as JwtPayload
-    } catch (error) {
-        throw new Error("You are not authorized!")
+        decodedData = jwtHelpers.verifyToken(token, config.jwt.refresh_token_secret as Secret);
     }
 
+    catch (err) {
+        throw new Error("You are not authorized!")
+    }
+    // console.log({ decodedData })
     const userData = await prisma.user.findUniqueOrThrow({
         where: {
-            email: decodedData?.email
+            email: decodedData?.email,
+            status: UserStatus.ACTIVE
         }
-    })
+    });
 
-    const accessToken = jwtHelpers.generateToken(
-        {
-            email: userData.email,
-            role: userData.role
-        },
-        "abcdefghij",
-        "5m"
-    )
+    const accessToken = jwtHelpers.generateToken({
+        email: userData.email,
+        role: userData.role
+    },
+        config.jwt.jwt_secret as Secret,
+        config.jwt.expires_in as string
+    );
 
     return {
         accessToken,
         needPasswordChange: userData.needPasswordChange
     };
-}
+
+};
 
 
 export const authService = {
