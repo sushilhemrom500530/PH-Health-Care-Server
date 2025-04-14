@@ -13,7 +13,7 @@ const sendResponse = <T>(res: Response, jsonData: {
 }) => {
     res.status(jsonData.statusCode).json({
         success: true,
-        message: "Admin retrive successfully",
+        message: jsonData.message,
         meta: jsonData.meta || null || undefined,
         data: jsonData.data || null || undefined
     })
