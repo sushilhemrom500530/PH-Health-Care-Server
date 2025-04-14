@@ -78,8 +78,17 @@ const refreshToken = async (token: string) => {
 
 };
 
-
+const changePassword = async (user: any, payload: any) => {
+    const userData = await prisma.user.findUniqueOrThrow({
+        where: {
+            email: user.email,
+            status: UserStatus.ACTIVE
+        }
+    })
+    console.log({ userData })
+}
 export const authService = {
     loginUser,
-    refreshToken
+    refreshToken,
+    changePassword,
 }

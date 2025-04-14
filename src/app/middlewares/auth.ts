@@ -15,9 +15,7 @@ const auth = (...roles: string[]) => {
             }
 
             const verifiedUser = jwtHelpers.verifyToken(token, config.jwt.jwt_secret as Secret)
-            // jwtHelpers.verifyToken(token, config.jwt.jwt_secret as Secret)
-
-            // req.user = verifiedUser;
+            req.user = verifiedUser;
             // console.log({ verifiedUser })
 
             if (roles.length && !roles.includes(verifiedUser?.role)) {
