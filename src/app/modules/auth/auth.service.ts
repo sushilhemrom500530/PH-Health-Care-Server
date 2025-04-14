@@ -4,6 +4,7 @@ import { jwtHelpers } from './../../../helpers/jwtHelpers';
 import jwt, { JwtPayload, Secret } from "jsonwebtoken";
 import { UserStatus } from "@prisma/client";
 import config from "../../../config";
+import emailSender from "./emailSender";
 
 
 
@@ -120,7 +121,26 @@ const forgotPassword = async (payload: { email: string }) => {
         config.jwt.reset_pass_token as Secret,
         config.jwt.refresh_token_expires_in as string
     )
-    console.log({ resetPassToken })
+
+    const resetPassLink = config.reset_pass_link + `?email=${userData.email}&token=${resetPassToken}`
+    console.log(resetPassLink)
+
+    // http:/localhost:3000/reset-password?email=sushil@gmail.com&token=lkjskjsdfkjsdfdsfkhkshf
+    await emailSender(
+        userData.email,
+        `
+         <div>
+          <p>Dear User,</p>
+          <p>Your password reset link</p>
+            <a href=${resetPassLink}>
+                <button>
+                    Reset Password
+                </button>
+            </a>
+            </p>
+        </div>
+        `
+    )
 }
 export const authService = {
     loginUser,
