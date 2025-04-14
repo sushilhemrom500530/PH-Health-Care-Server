@@ -5,6 +5,8 @@ import jwt, { JwtPayload, Secret } from "jsonwebtoken";
 import { UserStatus } from "@prisma/client";
 import config from "../../../config";
 import emailSender from "./emailSender";
+import apiError from "../../error/apiError";
+import status from "http-status";
 
 
 
@@ -105,7 +107,8 @@ const changePassword = async (user: any, payload: any) => {
     return {
         message: "Password change successfully"
     }
-}
+};
+
 const forgotPassword = async (payload: { email: string }) => {
     const userData = await prisma.user.findUniqueOrThrow({
         where: {
@@ -123,7 +126,7 @@ const forgotPassword = async (payload: { email: string }) => {
     )
 
     const resetPassLink = config.reset_pass_link + `?email=${userData.email}&token=${resetPassToken}`
-    console.log(resetPassLink)
+    // console.log(resetPassLink)
 
     // http:/localhost:3000/reset-password?email=sushil@gmail.com&token=lkjskjsdfkjsdfdsfkhkshf
     await emailSender(
@@ -141,11 +144,41 @@ const forgotPassword = async (payload: { email: string }) => {
         </div>
         `
     )
+};
+
+const resetPassword = async (token: string, payload: { email: string, password: string }) => {
+    // console.log({ token, payload })
+    await prisma.user.findUniqueOrThrow({
+        where: {
+            email: payload.email,
+            status: UserStatus.ACTIVE
+        }
+    })
+    // const isValidToken = jwtHelpers.verifyToken(token, config.jwt.reset_pass_token as Secret);
+
+    // console.log({ isValidToken })
+    // if (!isValidToken) {
+    //     throw new apiError(status.FORBIDDEN, "Forbidden access!")
+    // }
+    const hashedPassword: string = await bcrypt.hash(payload.password, 12);
+
+    const result = await prisma.user.update({
+        where: {
+            email: payload.email
+        },
+        data: {
+            password: hashedPassword,
+            needPasswordChange: false
+        }
+    })
+    return result;
+
 }
 export const authService = {
     loginUser,
     refreshToken,
     changePassword,
     forgotPassword,
+    resetPassword,
 
 }
