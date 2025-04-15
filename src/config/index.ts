@@ -18,5 +18,10 @@ export default {
     email_sender: {
         email: process.env.EMAIL,
         password: process.env.APP_PASS
+    },
+    cloudinary: {
+        name: process.env.CLOUDINARY_NAME,
+        api_key: process.env.CLOUDINARY_API_KEY,
+        api_secret: process.env.CLOUDINARY_API_SECRET,
     }
 }
