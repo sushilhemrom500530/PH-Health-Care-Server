@@ -83,7 +83,7 @@ const getAllFromDB = async (params: TAdminSearchField, options: TPaginationOptio
         },
         data: result
     }
-}
+};
 
 
 const getSingleDataById = async (id: string): Promise<Admin | null> => {

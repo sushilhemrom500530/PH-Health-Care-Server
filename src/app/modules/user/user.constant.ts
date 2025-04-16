@@ -1,0 +1,1 @@
+export const userSearchAbleFields: string[] = ['email']
