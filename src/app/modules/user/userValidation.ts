@@ -1,22 +1,109 @@
-import zod from "zod"
+import { z } from "zod";
+import { Gender } from "@prisma/client";
 
-const createAdmin = zod.object({
-    password: zod.string({
+const createAdmin = z.object({
+    password: z.string({
         required_error: "Password is required"
     }),
-    admin: zod.object({
-        name: zod.string({
+    admin: z.object({
+        name: z.string({
             required_error: 'Name is required'
         }),
-        email: zod.string({
+        email: z.string({
             required_error: "Email is required"
         }),
-        contactNumber: zod.string({
+        contactNumber: z.string({
             required_error: "Contact number is required"
         })
     })
 })
 
+const createDoctor = z.object({
+    password: z.string({
+        required_error: "Password is required"
+    }),
+    doctor: z.object({
+        name: z.string({
+            required_error: 'Name is required'
+        }),
+        email: z.string({
+            required_error: "Email is required"
+        }),
+        contactNumber: z.string({
+            required_error: "Contact number is required"
+        }),
+        address: z.string().optional(),
+        registrationNumber: z.string({
+            required_error: "Registration Number is required"
+        }),
+        experience: z.number({
+            required_error: "Experience is required"
+        }),
+        gender: z.enum([Gender.MALE, Gender.FEMALE]),
+        appointmentFee: z.number({
+            required_error: "Appointment fee is required"
+        }),
+        qualification: z.string({
+            required_error: "Qualification is required"
+        }),
+        currentWorkingPlace: z.string({
+            required_error: "Current Working Place is required"
+        }),
+        designation: z.string({
+            required_error: "Designation is required"
+        }),
+        isDeleted: z.boolean().optional(),
+        averageRating: z.number({
+            required_error: "Average Rating is required"
+        })
+    })
+
+})
+
+const createPatient = z.object({
+    password: z.string({
+        required_error: "Password is required"
+    }),
+    patient: z.object({
+        name: z.string({
+            required_error: 'Name is required'
+        }),
+        email: z.string({
+            required_error: "Email is required"
+        }),
+        contactNumber: z.string({
+            required_error: "Contact number is required"
+        }),
+        address: z.string().optional(),
+        registrationNumber: z.string({
+            required_error: "Registration Number is required"
+        }),
+        experience: z.number({
+            required_error: "Experience is required"
+        }),
+        gender: z.enum([Gender.MALE, Gender.FEMALE]),
+        appointmentFee: z.number({
+            required_error: "Appointment fee is required"
+        }),
+        qualification: z.string({
+            required_error: "Qualification is required"
+        }),
+        currentWorkingPlace: z.string({
+            required_error: "Current Working Place is required"
+        }),
+        designation: z.string({
+            required_error: "Designation is required"
+        }),
+        isDeleted: z.boolean().optional(),
+        averageRating: z.number({
+            required_error: "Average Rating is required"
+        })
+    })
+
+})
+
 export const userValidation = {
     createAdmin,
+    createDoctor,
+    createPatient
 }
