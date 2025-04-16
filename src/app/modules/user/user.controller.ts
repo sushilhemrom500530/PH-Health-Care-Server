@@ -1,5 +1,10 @@
 import { Request, Response } from "express";
 import { userService } from "./user.service";
+import catchAsync from "../../../shared/catchAsync";
+import sendResponse from "../../../shared/sentResponse";
+import status from "http-status";
+import pick from "../../../shared/pick";
+import { userFilterAbleFields, userPaginationAndSort } from "./user.constant";
 
 
 const createAdmin = async (req: Request, res: Response) => {
@@ -59,8 +64,26 @@ const createPatient = async (req: Request, res: Response) => {
     }
 }
 
+
+const getAllFromDB = catchAsync(async (req: Request, res: Response) => {
+    const filters = await pick(req.query, userFilterAbleFields)
+    const options = await pick(req.query, userPaginationAndSort)
+    // console.log({ options })
+    const result = await userService.getAllFromDB(filters, options);
+
+    sendResponse(res, {
+        statusCode: status.OK,
+        success: true,
+        message: "User rettrive successfully",
+        meta: result.meta,
+        data: result.data
+    })
+})
+
 export const userController = {
     createAdmin,
     createDoctor,
-    createPatient
+    createPatient,
+    getAllFromDB,
+
 }
