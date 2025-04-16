@@ -9,6 +9,7 @@ const router = express.Router();
 
 router.post(
     "/login",
+    auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
     authController.loginUser
 );
 

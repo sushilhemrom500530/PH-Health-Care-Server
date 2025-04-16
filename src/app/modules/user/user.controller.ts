@@ -66,9 +66,10 @@ const createPatient = async (req: Request, res: Response) => {
 
 
 const getAllFromDB = catchAsync(async (req: Request, res: Response) => {
+    const params = req.params;
     const filters = await pick(req.query, userFilterAbleFields)
     const options = await pick(req.query, userPaginationAndSort)
-    // console.log({ options })
+    console.log({ params })
     const result = await userService.getAllFromDB(filters, options);
 
     sendResponse(res, {

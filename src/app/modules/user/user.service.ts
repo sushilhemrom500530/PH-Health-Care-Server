@@ -113,6 +113,7 @@ const getAllFromDB = async (params: any, options: TPaginationOptions) => {
     const { searchTerm, ...filterData } = params;
     const { page, limit, skip, } = calculatePagination(options);
     const andConditions: Prisma.UserWhereInput[] = [];
+    console.log({ params })
 
     if (params.searchTerm) {
         andConditions.push({
@@ -138,7 +139,7 @@ const getAllFromDB = async (params: any, options: TPaginationOptions) => {
 
     // console.dir(andConditions, { depth: "inifinity" })
 
-    const whereConditions: Prisma.UserWhereInput = andConditions.length > 0 ? { AND: andConditions } : {}
+    const whereConditions: Prisma.UserWhereInput = andConditions.length > 0 ? { AND: andConditions } : {};
 
     const result = await prisma.user.findMany({
         where: whereConditions,
@@ -148,6 +149,18 @@ const getAllFromDB = async (params: any, options: TPaginationOptions) => {
             [options.sortBy]: options.sortOrder
         } : {
             createdAt: 'desc'
+        },
+        select: {
+            id: true,
+            email: true,
+            role: true,
+            needPasswordChange: true,
+            status: true,
+            createdAt: true,
+            updatedAt: true,
+            admin: true,
+            doctor: true,
+            patient: true,
         }
     });
 
