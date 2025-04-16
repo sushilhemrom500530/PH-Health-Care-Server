@@ -8,7 +8,17 @@ import { userValidation } from "./userValidation";
 const router = express.Router();
 
 
-router.post("/",
+router.post("/create-admin",
+    fileUploader.upload.single('file'),
+    auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
+    (req: Request, res: Response, next: NextFunction) => {
+        req.body = userValidation.createAdmin.parse(JSON.parse(req.body.data))
+        return userController.createAdmin(req, res)
+    }
+
+)
+
+router.post("/create-doctor",
     fileUploader.upload.single('file'),
     auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
     (req: Request, res: Response, next: NextFunction) => {
