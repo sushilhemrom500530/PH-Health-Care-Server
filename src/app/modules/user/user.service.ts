@@ -196,10 +196,17 @@ const changeProfileStatus = async (id: string, data: { status: UserStatus }) => 
     return userUpdateStatus;
 };
 
+const getMyProfile = async () => {
+    return {
+        message: "Profile rettrive successfully!"
+    }
+}
+
 export const userService = {
     createAdmin,
     createDoctor,
     createPatient,
     getAllFromDB,
-    changeProfileStatus
+    changeProfileStatus,
+    getMyProfile
 }

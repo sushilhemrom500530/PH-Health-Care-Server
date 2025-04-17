@@ -45,6 +45,10 @@ router.patch(
     validateRequest(userValidation.updateStatus),
     userController.changeProfileStatus
 )
+router.get(
+    "/profile",
+    userController.getMyProfile
+)
 
 
 export const userRoutes = router;
