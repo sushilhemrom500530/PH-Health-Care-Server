@@ -5,6 +5,7 @@ import sendResponse from "../../../shared/sentResponse";
 import status from "http-status";
 import pick from "../../../shared/pick";
 import { userFilterAbleFields, userPaginationAndSort } from "./user.constant";
+import { TTokenUser } from "../../interfaces";
 
 
 const createAdmin = async (req: Request, res: Response) => {
@@ -94,10 +95,10 @@ const changeProfileStatus = async (req: Request, res: Response) => {
     })
 
 }
-const getMyProfile = async (req: any, res: Response) => {
+const getMyProfile = async (req: Request & { user?: TTokenUser }, res: Response) => {
     const user = req?.user;
 
-    const result = await userService.getMyProfile(user);
+    const result = await userService.getMyProfile(user as TTokenUser);
 
     sendResponse(res, {
         statusCode: status.OK,
@@ -107,10 +108,10 @@ const getMyProfile = async (req: any, res: Response) => {
     })
 };
 
-const updateProfile = async (req: any, res: any) => {
+const updateProfile = async (req: Request & { user?: TTokenUser }, res: Response) => {
     const user = req.user;
 
-    const result = await userService.updateProfile(user, req)
+    const result = await userService.updateProfile(user as TTokenUser, req)
 
 
     sendResponse(res, {
