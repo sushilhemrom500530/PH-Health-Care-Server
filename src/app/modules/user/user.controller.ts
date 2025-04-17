@@ -110,7 +110,7 @@ const getMyProfile = async (req: any, res: Response) => {
 const updateProfile = async (req: any, res: any) => {
     const user = req.user;
 
-    const result = await userService.updateProfile(user, req.body)
+    const result = await userService.updateProfile(user, req)
 
 
     sendResponse(res, {

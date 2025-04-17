@@ -247,8 +247,15 @@ const getMyProfile = async (user: TTokenUser) => {
 };
 
 
-const updateProfile = async (user: TTokenUser, payload: any) => {
-    console.log(user, payload)
+const updateProfile = async (user: TTokenUser, req: Request) => {
+    // console.log(user, req.body)
+    const payload = req.body;
+    const file = req.file as TFile;
+
+    if (file) {
+        const uploadToCloudinary = await fileUploader.uploadToCloudinary(file);
+        req.body.profilePhoto = uploadToCloudinary?.secure_url
+    }
     const userInfo = await prisma.user.findUniqueOrThrow({
         where: {
             email: user?.email,
