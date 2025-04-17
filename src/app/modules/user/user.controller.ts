@@ -95,15 +95,26 @@ const changeProfileStatus = async (req: any, res: any) => {
 
 }
 const getMyProfile = async (req: any, res: any) => {
-    const { id } = req.params;
+    const user = req.user;
 
-    const result = await userService.getMyProfile();
+    const result = await userService.getMyProfile(user);
 
     sendResponse(res, {
         statusCode: status.OK,
         success: true,
         message: "Rettrive Profile successfully",
         data: result
+    })
+};
+
+const updateProfile = async (req: any, res: any) => {
+
+
+    sendResponse(res, {
+        statusCode: status.OK,
+        success: true,
+        message: "Profile updated successfully",
+        data: null
     })
 
 }
@@ -115,5 +126,6 @@ export const userController = {
     createPatient,
     getAllFromDB,
     changeProfileStatus,
-    getMyProfile
+    getMyProfile,
+    updateProfile
 }

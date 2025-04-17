@@ -196,11 +196,59 @@ const changeProfileStatus = async (id: string, data: { status: UserStatus }) => 
     return userUpdateStatus;
 };
 
-const getMyProfile = async () => {
-    return {
-        message: "Profile rettrive successfully!"
+const getMyProfile = async (user) => {
+    const userInfo = await prisma.user.findUniqueOrThrow({
+        where: {
+            email: user.email
+        },
+        select: {
+            id: true,
+            email: true,
+            role: true,
+            needPasswordChange: true,
+            status: true
+        }
+    });
+
+    let profileInfo;
+
+    if (userInfo.role === UserRole.SUPER_ADMIN) {
+        profileInfo = await prisma.admin.findUnique({
+            where: {
+                email: userInfo.email
+            }
+        })
     }
-}
+    else if (userInfo.role === UserRole.ADMIN) {
+        profileInfo = await prisma.admin.findUnique({
+            where: {
+                email: userInfo.email
+            }
+        })
+    }
+    else if (userInfo.role === UserRole.DOCTOR) {
+        profileInfo = await prisma.doctor.findUnique({
+            where: {
+                email: userInfo.email
+            }
+        })
+    }
+    else if (userInfo.role === UserRole.PATIENT) {
+        profileInfo = await prisma.patient.findUnique({
+            where: {
+                email: userInfo.email
+            }
+        })
+    }
+
+    return { ...userInfo, ...profileInfo };
+};
+
+
+const updateProfile = async (id: string, data: any) => {
+    console.log(id, data)
+
+};
 
 export const userService = {
     createAdmin,
@@ -208,5 +256,6 @@ export const userService = {
     createPatient,
     getAllFromDB,
     changeProfileStatus,
-    getMyProfile
+    getMyProfile,
+    updateProfile
 }

@@ -13,6 +13,12 @@ router.get('/',
     userController.getAllFromDB
 );
 
+router.get(
+    "/me",
+    auth(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.DOCTOR, UserRole.PATIENT),
+    userController.getMyProfile
+);
+
 router.post("/create-admin",
     fileUploader.upload.single('file'),
     auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
@@ -44,11 +50,14 @@ router.patch(
     auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
     validateRequest(userValidation.updateStatus),
     userController.changeProfileStatus
-)
-router.get(
-    "/profile",
-    userController.getMyProfile
-)
+);
+
+router.patch(
+    "/update-my-profile",
+    auth(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.DOCTOR, UserRole.PATIENT),
+    userController.updateProfile
+);
+
 
 
 export const userRoutes = router;
