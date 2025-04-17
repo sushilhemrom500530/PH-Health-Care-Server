@@ -81,7 +81,7 @@ const getAllFromDB = catchAsync(async (req: Request, res: Response) => {
     })
 })
 
-const changeProfileStatus = async (req: any, res: any) => {
+const changeProfileStatus = async (req: Request, res: Response) => {
     const { id } = req.params;
 
     const result = await userService.changeProfileStatus(id, req.body);
@@ -94,8 +94,8 @@ const changeProfileStatus = async (req: any, res: any) => {
     })
 
 }
-const getMyProfile = async (req: any, res: any) => {
-    const user = req.user;
+const getMyProfile = async (req: any, res: Response) => {
+    const user = req?.user;
 
     const result = await userService.getMyProfile(user);
 
@@ -108,13 +108,16 @@ const getMyProfile = async (req: any, res: any) => {
 };
 
 const updateProfile = async (req: any, res: any) => {
+    const user = req.user;
+
+    const result = await userService.updateProfile(user, req.body)
 
 
     sendResponse(res, {
         statusCode: status.OK,
         success: true,
         message: "Profile updated successfully",
-        data: null
+        data: result
     })
 
 }
