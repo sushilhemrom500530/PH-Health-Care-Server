@@ -7,12 +7,33 @@ import { specialitiesValidation } from "./specialities.validation";
 
 const router = express.Router();
 
-router.get('/',
+router.get(
+    '/',
+    auth(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.DOCTOR),
+    specialitiesController.getAllFromDb
+);
+
+router.post('/create',
+    auth(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.DOCTOR),
     fileUploader.upload.single('file'),
     (req: Request, res: Response, next: NextFunction) => {
         req.body = specialitiesValidation.create.parse(JSON.parse(req.body.data))
         return specialitiesController.insertIntoDB(req, res)
     },
+);
+
+
+
+
+router.get(
+    '/:id',
+    auth(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.DOCTOR),
+    specialitiesController.getSingleData
+);
+router.delete(
+    '/:id',
+    auth(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.DOCTOR),
+    specialitiesController.deleteSpecialities
 );
 
 

@@ -3,6 +3,11 @@ import { TFile } from "../../interfaces/file";
 import { fileUploader } from "../../../helpers/fileUploader";
 import prisma from "../../../shared/prisma";
 
+const getAllFromDb = async () => {
+    const result = await prisma.specialities.findMany();
+    return result;
+};
+
 const insertIntoDB = async (req: Request) => {
     const file = req.file as TFile;
     if (file) {
@@ -16,6 +21,31 @@ const insertIntoDB = async (req: Request) => {
     return result;
 };
 
+const getSingleData = async (id: string) => {
+
+    const result = await prisma.specialities.findUnique({
+        where: {
+            id
+        }
+    })
+    console.log({ id, result })
+    return result;
+};
+
+const deleteSpecialities = async (id: string) => {
+
+    const result = await prisma.specialities.delete({
+        where: {
+            id
+        }
+    })
+    console.log({ result })
+    return result;
+};
+
 export const specialitiesService = {
-    insertIntoDB
+    insertIntoDB,
+    getSingleData,
+    deleteSpecialities,
+    getAllFromDb
 }
