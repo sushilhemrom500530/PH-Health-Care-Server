@@ -3,13 +3,14 @@ import auth from "../../middlewares/auth";
 import { UserRole } from "@prisma/client";
 import { specialitiesController } from "./specialities.controller";
 import { fileUploader } from "../../../helpers/fileUploader";
+import { specialitiesValidation } from "./specialities.validation";
 
 const router = express.Router();
 
 router.get('/',
     fileUploader.upload.single('file'),
     (req: Request, res: Response, next: NextFunction) => {
-        req.body = JSON.parse(req.body.data)
+        req.body = specialitiesValidation.create.parse(JSON.parse(req.body.data))
         return specialitiesController.insertIntoDB(req, res)
     },
 );
