@@ -15,9 +15,9 @@ const getAllFromDb = async (req: Request, res: Response) => {
     })
 };
 
-const updateDoctor = async (req: Request, res: Response) => {
+const updateIntoDB = async (req: Request, res: Response) => {
     const { id } = req.params;
-    const result = await doctorService.updateDoctor(id);
+    const result = await doctorService.updateDoctor(id, req.body);
 
     sendResponse(res, {
         statusCode: status.OK,
@@ -29,5 +29,5 @@ const updateDoctor = async (req: Request, res: Response) => {
 
 export const doctorController = {
     getAllFromDb,
-    updateDoctor,
+    updateIntoDB,
 }

@@ -13,7 +13,7 @@ router.get(
 
 router.patch(
     '/:id',
-    doctorController.updateDoctor
+    doctorController.updateIntoDB
 )
 
 
