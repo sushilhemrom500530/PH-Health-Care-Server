@@ -39,4 +39,4 @@ router.delete(
 
 
 
-export const specialities = router;
+export const specialitiesRoutes = router;

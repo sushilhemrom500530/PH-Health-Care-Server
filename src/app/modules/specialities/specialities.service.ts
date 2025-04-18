@@ -27,8 +27,7 @@ const getSingleData = async (id: string) => {
         where: {
             id
         }
-    })
-    console.log({ id, result })
+    });
     return result;
 };
 
@@ -39,7 +38,6 @@ const deleteSpecialities = async (id: string) => {
             id
         }
     })
-    console.log({ result })
     return result;
 };
 
