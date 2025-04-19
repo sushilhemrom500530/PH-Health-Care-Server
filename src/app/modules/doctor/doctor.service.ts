@@ -2,10 +2,12 @@ import prisma from "../../../shared/prisma"
 import calculatePagination from "../../../helpers/paginationHelper";
 import { Prisma } from "@prisma/client";
 import { doctorSearchableFields } from "./doctor.constant";
+import { TDoctorFilterRequest } from "./doctor.interface";
+import { TPaginationOptions } from "../../interfaces/pagination";
 
 const getAllFromDB = async (
-    filters: IDoctorFilterRequest,
-    options: IPaginationOptions,
+    filters: TDoctorFilterRequest,
+    options: TPaginationOptions,
 ) => {
     const { page, limit, skip, } = calculatePagination(options);
     const { searchTerm, specialties, ...filterData } = filters;
