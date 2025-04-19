@@ -11,12 +11,26 @@ router.get(
     doctorController.getAllFromDb
 );
 
+router.get(
+    '/:id',
+    doctorController.getByIdFromDB
+);
+
 router.patch(
     '/:id',
     doctorController.updateIntoDB
 )
 
+router.delete(
+    '/:id',
+    auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
+    doctorController.deleteFromDB
+);
 
+router.delete(
+    '/soft/:id',
+    auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
+    doctorController.softDelete);
 
 
 export const doctorRoutes = router;

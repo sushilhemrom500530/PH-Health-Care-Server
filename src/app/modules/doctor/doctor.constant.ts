@@ -13,7 +13,7 @@ export const doctorFilterableFields: string[] = [
     'contactNumber',
     'gender',
     'apointmentFee',
-    'specialties'
+    'specialties',
 ];
 
 export const doctorFilterOptions: string[] = ['limit', 'page', 'sortBy', 'sortOrder'];
