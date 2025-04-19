@@ -4,50 +4,35 @@ export type TPatientFilterRequest = {
     searchTerm?: string | undefined;
     email?: string | undefined;
     contactNo?: string | undefined;
-    gender?: string | undefined;
-    specialties?: string | undefined;
 };
+
+export type TPatientHealthData = {
+    gender: Gender
+    dateOfBirth: string
+    bloodGroup: BloodGroup
+    hasAllergies?: boolean
+    hasDiabetes?: boolean
+    height: string
+    weight: string
+    smokingStatus?: boolean
+    dietaryPreferences?: string
+    pregnancyStatus?: boolean
+    mentalHealthHistory?: string
+    immunizationStatus?: string
+    hasPastSurgeries?: boolean
+    recentAnxiety?: boolean
+    recentDepression?: boolean
+    maritalStatus?: MaritalStatus
+};
+type TMedicalReport = {
+    reportName: string
+    reportLink: string
+}
 
 export type TPatientUpdate = {
-    patientId?: string;
-    gender?: Gender;
-    dateOfBirth?: string;
-    bloodGroup?: BloodGroup;
-    hasAllergies?: boolean;
-    hasDiabetes?: boolean;
-    height?: string;
-    width?: string;
-    smokingStatus?: boolean;
-    dieteryPreferences?: string;
-    pregnancyStatus?: boolean;
-    mentalHealthHistory?: string;
-    immunizationStatus?: string;
-    hasPastSurgeries?: boolean;
-    recentAnxiety?: boolean;
-    recentDepression?: boolean;
-    maritalStatus?: MaritalStatus;
-};
-export type TPatientCreate = {
-    patientId?: string;
-    gender?: Gender;
-    dateOfBirth?: string;
-    bloodGroup?: BloodGroup;
-    hasAllergies?: boolean;
-    hasDiabetes?: boolean;
-    height?: string;
-    width?: string;
-    smokingStatus?: boolean;
-    dieteryPreferences?: string;
-    pregnancyStatus?: boolean;
-    mentalHealthHistory?: string;
-    immunizationStatus?: string;
-    hasPastSurgeries?: boolean;
-    recentAnxiety?: boolean;
-    recentDepression?: boolean;
-    maritalStatus?: MaritalStatus;
-};
-
-export type TSpecialties = {
-    specialtiesId: string;
-    isDeleted?: null;
-};
+    name: string
+    contactNumber: string
+    address: string;
+    patientHealthData: TPatientHealthData,
+    medicalReport: TMedicalReport
+}

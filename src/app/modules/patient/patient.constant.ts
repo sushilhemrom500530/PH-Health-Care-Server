@@ -1,19 +1,9 @@
-export const patientSearchableFields: string[] = [
-    'name',
-    'email',
-    'contactNumber',
-    'address',
-    'qualification',
-    'designation'
-];
+export const patientSearchableFields: string[] = ['name', 'email', 'contactNo'];
 
 export const patientFilterableFields: string[] = [
     'searchTerm',
     'email',
-    'contactNumber',
-    'gender',
-    'apointmentFee',
-    'specialties',
+    'contactNo',
 ];
 
-export const patientFilterOptions: string[] = ['limit', 'page', 'sortBy', 'sortOrder'];
+export const patientFilterOptions = ['limit', 'page', 'sortBy', 'sortOrder'];
