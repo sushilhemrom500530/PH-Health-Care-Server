@@ -30,7 +30,8 @@ router.delete(
 router.delete(
     '/soft/:id',
     auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
-    doctorController.softDelete);
+    doctorController.softDelete
+);
 
 
 export const doctorRoutes = router;
