@@ -1,9 +1,9 @@
 import prisma from "../../../shared/prisma"
 import { Patient, Prisma, UserStatus } from "@prisma/client";
 import { TPaginationOptions } from "../../interfaces/pagination";
-import { TPatientFilterRequest, TPatientUpdate } from "./patient.interface";
 import { patientSearchableFields } from "./patient.constant";
 import calculatePagination from "../../../helpers/paginationHelper";
+import { TPatientFilterRequest, TPatientUpdate } from "./patient.interface";
 
 const getAllFromDB = async (
     filters: TPatientFilterRequest,
@@ -72,13 +72,6 @@ const getAllFromDB = async (
     };
 };
 
-const createPatient = async (payload: any): Promise<Patient | null> => {
-    const result = await prisma.patient.create({
-        data: payload
-    })
-    return result;
-};
-
 const getByIdFromDB = async (id: string): Promise<Patient | null> => {
     const result = await prisma.patient.findUnique({
         where: {
@@ -94,7 +87,6 @@ const getByIdFromDB = async (id: string): Promise<Patient | null> => {
 };
 
 const updateIntoDB = async (id: string, payload: Partial<TPatientUpdate>): Promise<Patient | null> => {
-
     const { patientHealthData, medicalReport, ...patientData } = payload;
 
     const patientInfo = await prisma.patient.findUniqueOrThrow({
@@ -103,10 +95,10 @@ const updateIntoDB = async (id: string, payload: Partial<TPatientUpdate>): Promi
             isDeleted: false
         }
     });
-
+    // console.log({ patientInfo })
     await prisma.$transaction(async (transactionClient) => {
         //update patient data
-        await transactionClient.patient.update({
+        const update = await transactionClient.patient.update({
             where: {
                 id
             },
@@ -116,15 +108,14 @@ const updateIntoDB = async (id: string, payload: Partial<TPatientUpdate>): Promi
                 medicalReport: true
             }
         });
-
+        // console.log({ update })
         // create or update patient health data
         if (patientHealthData) {
-            await transactionClient.patientHealthData.upsert({
+            await transactionClient.patientHealthData.update({
                 where: {
                     patientId: patientInfo.id
                 },
-                update: patientHealthData,
-                create: { ...patientHealthData, patientId: patientInfo.id }
+                data: patientHealthData,
             });
         };
 
@@ -145,6 +136,7 @@ const updateIntoDB = async (id: string, payload: Partial<TPatientUpdate>): Promi
             medicalReport: true
         }
     })
+    // console.log({ responseData })
     return responseData;
 
 };
@@ -209,7 +201,6 @@ const softDelete = async (id: string): Promise<Patient | null> => {
 
 export const patientService = {
     getAllFromDB,
-    createPatient,
     getByIdFromDB,
     updateIntoDB,
     deleteFromDB,

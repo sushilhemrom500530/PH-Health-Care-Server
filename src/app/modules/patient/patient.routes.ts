@@ -14,7 +14,7 @@ router.get(
 );
 
 router.patch(
-    '/:id',
+    '/update/:id',
     patientController.updateIntoDB
 );
 

@@ -2,21 +2,10 @@ import { Request, Response } from "express";
 import sendResponse from "../../../shared/sentResponse";
 import status from "http-status";
 import pick from "../../../shared/pick";
-import catchAsync from "../../../shared/catchAsync";
 import { patientService } from "./patient.service";
 import { patientFilterableFields, patientFilterOptions } from "./patient.constant";
+import catchAsync from "../../../shared/catchAsync";
 
-const insertIntoDB = catchAsync(async (req: Request, res: Response) => {
-
-    const result = await patientService.createPatient(req.body);
-
-    sendResponse(res, {
-        statusCode: status.OK,
-        success: true,
-        message: 'Patient created successfully',
-        data: result
-    });
-});
 
 const getAllFromDB = catchAsync(async (req: Request, res: Response) => {
     const filters = pick(req.query, patientFilterableFields);
@@ -83,7 +72,6 @@ const softDelete = catchAsync(async (req: Request, res: Response) => {
 
 export const patientController = {
     getAllFromDB,
-    insertIntoDB,
     getByIdFromDB,
     updateIntoDB,
     deleteFromDB,

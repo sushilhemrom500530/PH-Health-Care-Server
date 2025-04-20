@@ -1,4 +1,5 @@
 import { NextFunction, Request, RequestHandler, Response } from "express";
+import { json } from "stream/consumers";
 
 
 const catchAsync = (fn: RequestHandler) => {
@@ -6,7 +7,11 @@ const catchAsync = (fn: RequestHandler) => {
         try {
             await fn(req, res, next)
         } catch (error: any) {
-
+            return {
+                status: false,
+                message: error.message || "Something went wrong!",
+                error
+            }
         }
     }
 }
