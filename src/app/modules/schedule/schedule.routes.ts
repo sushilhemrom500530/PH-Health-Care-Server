@@ -7,6 +7,10 @@ router.get(
     '/',
     scheduleController.getAllFromDb
 );
+router.post(
+    '/',
+    scheduleController.insertIntoDB
+);
 
 
 
