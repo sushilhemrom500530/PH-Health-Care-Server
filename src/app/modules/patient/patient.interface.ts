@@ -7,13 +7,13 @@ export type TPatientFilterRequest = {
 };
 
 export type TPatientHealthData = {
-    gender?: Gender
-    dateOfBirth?: string
-    bloodGroup?: BloodGroup
+    gender: Gender
+    dateOfBirth: string
+    bloodGroup: BloodGroup
     hasAllergies?: boolean
     hasDiabetes?: boolean
-    height?: string
-    weight?: string
+    height: string
+    weight: string
     smokingStatus?: boolean
     dietaryPreferences?: string
     pregnancyStatus?: boolean

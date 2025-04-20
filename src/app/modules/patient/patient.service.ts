@@ -98,7 +98,7 @@ const updateIntoDB = async (id: string, payload: Partial<TPatientUpdate>): Promi
     // console.log({ patientInfo })
     await prisma.$transaction(async (transactionClient) => {
         //update patient data
-        const update = await transactionClient.patient.update({
+        await transactionClient.patient.update({
             where: {
                 id
             },
@@ -111,11 +111,12 @@ const updateIntoDB = async (id: string, payload: Partial<TPatientUpdate>): Promi
         // console.log({ update })
         // create or update patient health data
         if (patientHealthData) {
-            await transactionClient.patientHealthData.update({
+            await transactionClient.patientHealthData.upsert({
                 where: {
                     patientId: patientInfo.id
                 },
-                data: patientHealthData,
+                update: patientHealthData,
+                create: { ...patientHealthData, patientId: patientInfo.id }
             });
         };
 
@@ -145,33 +146,35 @@ const updateIntoDB = async (id: string, payload: Partial<TPatientUpdate>): Promi
 const deleteFromDB = async (id: string): Promise<Patient | null> => {
     const result = await prisma.$transaction(async (tx) => {
         // delete medical report
-        await tx.medicalReport.deleteMany({
+        const md = await tx.medicalReport.deleteMany({
             where: {
                 patientId: id
             }
         });
-
+        console.log({ md })
         // delete patient health data
-        await tx.patientHealthData.delete({
+        const pd = await tx.patientHealthData.delete({
             where: {
                 patientId: id
             }
         });
-
+        console.log({ pd })
         const deletedPatient = await tx.patient.delete({
             where: {
                 id
             }
         });
-
-        await tx.user.delete({
+        console.log({ deletedPatient })
+        const du = await tx.user.delete({
             where: {
                 email: deletedPatient.email
             }
         });
+        console.log({ du })
 
         return deletedPatient;
     });
+    console.log({ result })
 
     return result;
 };
