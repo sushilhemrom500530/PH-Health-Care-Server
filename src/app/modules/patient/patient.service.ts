@@ -72,6 +72,13 @@ const getAllFromDB = async (
     };
 };
 
+const createPatient = async (payload: any): Promise<Patient | null> => {
+    const result = await prisma.patient.create({
+        data: payload
+    })
+    return result;
+};
+
 const getByIdFromDB = async (id: string): Promise<Patient | null> => {
     const result = await prisma.patient.findUnique({
         where: {
@@ -202,6 +209,7 @@ const softDelete = async (id: string): Promise<Patient | null> => {
 
 export const patientService = {
     getAllFromDB,
+    createPatient,
     getByIdFromDB,
     updateIntoDB,
     deleteFromDB,
