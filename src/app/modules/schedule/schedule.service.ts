@@ -1,14 +1,14 @@
 import { addHours, addMinutes, format } from "date-fns";
 import prisma from "../../../shared/prisma";
 import { Prisma, Schedule } from "@prisma/client";
-import { TSchedule } from "./schedule.interface";
+import { TSchedule, TScheduleFilter } from "./schedule.interface";
 import calculatePagination from "../../../helpers/paginationHelper";
 import { TPaginationOptions } from "../../interfaces/pagination";
 import { TTokenUser } from "../../interfaces";
 
 
 const getAllFromDB = async (
-    filters: any,
+    filters: TScheduleFilter,
     options: TPaginationOptions,
     user: TTokenUser
 ) => {

@@ -6,14 +6,19 @@ import { doctorScheduleController } from "./doctor-schedule.controller";
 const router = express.Router();
 
 router.get(
-    '/',
+    '/my-schedule',
     auth(UserRole.DOCTOR),
-    doctorScheduleController.getAllFromDb
+    doctorScheduleController.getMySchedule
 );
 router.post(
     '/create',
     auth(UserRole.DOCTOR),
     doctorScheduleController.insertIntoDB
+);
+router.delete(
+    '/:id',
+    auth(UserRole.DOCTOR),
+    doctorScheduleController.deleteFromDB
 );
 
 
