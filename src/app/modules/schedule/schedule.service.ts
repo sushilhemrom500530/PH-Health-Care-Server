@@ -1,12 +1,15 @@
 import { addHours, addMinutes, format } from "date-fns";
 import prisma from "../../../shared/prisma";
+import { Schedule } from "@prisma/client";
+import { TSchedule } from "./schedule.interface";
 
 
 const getAllFromDB = async () => {
-    console.log("Schedule Service")
+    const result = await prisma.schedule.findMany();
+    return result;
 }
 
-const insertIntoDB = async (payload: any) => {
+const insertIntoDB = async (payload: TSchedule): Promise<Schedule[]> => {
     const { startDate, endDate, startTime, endTime } = payload;
     const currentDate = new Date(startDate);
     const lastDate = new Date(endDate)
