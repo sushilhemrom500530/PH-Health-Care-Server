@@ -1,20 +1,20 @@
 import express, { NextFunction, Request, Response } from "express";
-import { scheduleController } from "./schedule.controller";
 import auth from "../../middlewares/auth";
 import { UserRole } from "@prisma/client";
+import { doctorScheduleController } from "./doctor-schedule.controller";
 
 const router = express.Router();
 
 router.get(
     '/',
     auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
-    scheduleController.getAllFromDb
+    doctorScheduleController.getAllFromDb
 );
 router.post(
     '/create',
-    scheduleController.insertIntoDB
+    doctorScheduleController.insertIntoDB
 );
 
 
 
-export const scheduleRoute = router;
+export const doctorScheduleRoute = router;
