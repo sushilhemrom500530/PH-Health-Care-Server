@@ -5,12 +5,13 @@ import catchAsync from "../../../shared/catchAsync";
 import { scheduleService } from "./schedule.service";
 import pick from "../../../shared/pick";
 import { scheduleFilters, scheduleOptionFilters } from "../doctor-schedule/schedule.constant";
+import { TTokenUser } from "../../interfaces";
 
-
-const getAllFromDb = catchAsync(async (req: Request, res: Response) => {
+const getAllFromDb = catchAsync(async (req: Request & { user?: TTokenUser }, res: Response) => {
     const filters = pick(req.query, scheduleFilters);
     const options = pick(req.query, scheduleOptionFilters);
-    const result = await scheduleService.getAllFromDB(filters, options)
+    const user = req.user;
+    const result = await scheduleService.getAllFromDB(filters, options, user as TTokenUser)
     sendResponse(res, {
         statusCode: status.OK,
         success: true,

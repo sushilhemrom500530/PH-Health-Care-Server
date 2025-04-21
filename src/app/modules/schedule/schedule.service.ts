@@ -4,16 +4,34 @@ import { Prisma, Schedule } from "@prisma/client";
 import { TSchedule } from "./schedule.interface";
 import calculatePagination from "../../../helpers/paginationHelper";
 import { TPaginationOptions } from "../../interfaces/pagination";
+import { TTokenUser } from "../../interfaces";
 
 
 const getAllFromDB = async (
     filters: any,
     options: TPaginationOptions,
+    user: TTokenUser
 ) => {
     const { limit, page, skip } = calculatePagination(options);
-    const { searchTerm, ...filterData } = filters;
-
+    const { startDate, endDate, ...filterData } = filters;
+    // console.log({ user })
     const andConditions = [];
+    if (startDate && endDate) {
+        andConditions.push({
+            AND: [
+                {
+                    startDateTime: {
+                        gte: startDate
+                    }
+                },
+                {
+                    endDateTime: {
+                        lte: endDate
+                    }
+                }
+            ]
+        })
+    }
 
     if (Object.keys(filterData).length > 0) {
         andConditions.push({
@@ -30,8 +48,23 @@ const getAllFromDB = async (
     const whereConditions: Prisma.ScheduleWhereInput =
         andConditions.length > 0 ? { AND: andConditions } : {};
 
+    const doctorSchedule = await prisma.doctorSchedules.findMany({
+        where: {
+            doctor: {
+                email: user.email
+            }
+        }
+    })
+    const doctorScheduleIds = doctorSchedule.map(scheduleId => scheduleId.scheduleId)
+    console.log({ doctorScheduleIds })
+
     const result = await prisma.schedule.findMany({
-        where: whereConditions,
+        where: {
+            ...whereConditions,
+            id: {
+                notIn: doctorScheduleIds
+            }
+        },
         skip,
         take: limit,
         orderBy:
@@ -42,7 +75,12 @@ const getAllFromDB = async (
                 },
     });
     const total = await prisma.schedule.count({
-        where: whereConditions,
+        where: {
+            ...whereConditions,
+            id: {
+                notIn: doctorScheduleIds
+            }
+        },
     });
 
     return {
