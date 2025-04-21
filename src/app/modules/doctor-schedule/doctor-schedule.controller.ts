@@ -7,6 +7,20 @@ import { TTokenUser } from "../../interfaces";
 import pick from "../../../shared/pick";
 import { doctorScheduleFilters, doctorScheduleOptionFilters } from "./doctor.schedule.constant";
 
+
+const getAllFromDB = catchAsync(async (req: Request & { user?: TTokenUser }, res: Response) => {
+    const filters = pick(req.query, doctorScheduleFilters);
+    const options = pick(req.query, doctorScheduleOptionFilters);
+    const user = req.user;
+    const result = await doctorScheduleService.getAllFromDB(filters, options, user as TTokenUser)
+    sendResponse(res, {
+        statusCode: status.OK,
+        success: true,
+        message: "Doctor Schedule rettrive successfully",
+        data: result
+    })
+});
+
 const getMySchedule = catchAsync(async (req: Request & { user?: TTokenUser }, res: Response) => {
     const filters = pick(req.query, doctorScheduleFilters);
     const options = pick(req.query, doctorScheduleOptionFilters);
@@ -44,6 +58,7 @@ const deleteFromDB = catchAsync(async (req: Request & { user?: any }, res: Respo
 });
 
 export const doctorScheduleController = {
+    getAllFromDB,
     getMySchedule,
     insertIntoDB,
     deleteFromDB

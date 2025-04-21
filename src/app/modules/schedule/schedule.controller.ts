@@ -39,9 +39,20 @@ const getSingleFromDB = catchAsync(async (req: Request, res: Response) => {
         data: result
     })
 })
+const deleteFromDB = catchAsync(async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const result = await scheduleService.deleteFromDB(id)
+    sendResponse(res, {
+        statusCode: status.OK,
+        success: true,
+        message: "Schedule deleted successfully",
+        data: result
+    })
+})
 
 export const scheduleController = {
     getAllFromDb,
     insertIntoDB,
     getSingleFromDB,
+    deleteFromDB
 }

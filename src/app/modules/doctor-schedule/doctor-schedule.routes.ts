@@ -6,6 +6,11 @@ import { doctorScheduleController } from "./doctor-schedule.controller";
 const router = express.Router();
 
 router.get(
+    '/',
+    auth(UserRole.DOCTOR),
+    doctorScheduleController.getAllFromDB
+);
+router.get(
     '/my-schedule',
     auth(UserRole.DOCTOR),
     doctorScheduleController.getMySchedule

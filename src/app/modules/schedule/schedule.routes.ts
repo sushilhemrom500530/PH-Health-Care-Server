@@ -20,7 +20,11 @@ router.post(
     auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
     scheduleController.insertIntoDB
 );
-
+router.delete(
+    '/:id',
+    auth(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.DOCTOR),
+    scheduleController.deleteFromDB
+);
 
 
 export const scheduleRoute = router;

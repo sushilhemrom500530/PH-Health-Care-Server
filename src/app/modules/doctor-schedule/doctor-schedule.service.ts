@@ -7,6 +7,97 @@ import { TDoctorScheduleFilter } from "./doctor-schedule.interface";
 import apiError from "../../error/apiError";
 import status from "http-status";
 
+
+const getAllFromDB = async (
+    filters: TDoctorScheduleFilter,
+    options: TPaginationOptions,
+    user: TTokenUser
+) => {
+    const { limit, page, skip } = calculatePagination(options);
+    const { startDate, endDate, ...filterData } = filters;
+
+    const andConditions = [];
+
+    if (startDate && endDate) {
+        andConditions.push({
+            AND: [
+                {
+                    startDateTime: {
+                        gte: startDate
+                    }
+                },
+                {
+                    endDateTime: {
+                        lte: endDate
+                    }
+                }
+            ]
+        })
+    };
+
+
+    if (Object.keys(filterData).length > 0) {
+        andConditions.push({
+            AND: Object.keys(filterData).map(key => {
+                return {
+                    [key]: {
+                        equals: (filterData as any)[key],
+                    },
+                };
+            }),
+        });
+    }
+
+    const whereConditions: Prisma.ScheduleWhereInput =
+        andConditions.length > 0 ? { AND: andConditions } : {};
+
+    const doctorSchedules = await prisma.doctorSchedules.findMany({
+        where: {
+            doctor: {
+                email: user?.email
+            }
+        }
+    });
+
+    const doctorScheduleIds = doctorSchedules.map(schedule => schedule.scheduleId);
+    // console.log(doctorScheduleIds)
+
+    const result = await prisma.schedule.findMany({
+        where: {
+            ...whereConditions,
+            id: {
+                notIn: doctorScheduleIds
+            }
+        },
+        skip,
+        take: limit,
+        orderBy:
+            options.sortBy && options.sortOrder
+                ? { [options.sortBy]: options.sortOrder }
+                : {
+                    createdAt: 'desc',
+                }
+    });
+    const total = await prisma.schedule.count({
+        where: {
+            ...whereConditions,
+            id: {
+                notIn: doctorScheduleIds
+            }
+        },
+    });
+
+    return {
+        meta: {
+            total,
+            page,
+            limit,
+        },
+        data: result,
+    };
+};
+
+
 const getMySchedule = async (
     filters: TDoctorScheduleFilter,
     options: TPaginationOptions,
@@ -137,6 +228,7 @@ const deleteFromDB = async (user: TTokenUser, scheduleId: string) => {
 }
 
 export const doctorScheduleService = {
+    getAllFromDB,
     getMySchedule,
     insertIntoDB,
     deleteFromDB
