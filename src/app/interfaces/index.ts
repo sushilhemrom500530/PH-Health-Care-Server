@@ -5,4 +5,9 @@ export type TTokenUser = {
     role: UserRole,
     iat: number,
     exp: number
-} 
+};
+
+export type TAuthUser = {
+    email: string,
+    role: string
+} | null;

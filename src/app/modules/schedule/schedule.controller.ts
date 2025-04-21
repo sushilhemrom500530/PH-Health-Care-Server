@@ -3,10 +3,14 @@ import sendResponse from "../../../shared/sentResponse";
 import status from "http-status";
 import catchAsync from "../../../shared/catchAsync";
 import { scheduleService } from "./schedule.service";
+import pick from "../../../shared/pick";
+import { scheduleFilters, scheduleOptionFilters } from "../doctor-schedule/schedule.constant";
 
 
 const getAllFromDb = catchAsync(async (req: Request, res: Response) => {
-    const result = await scheduleService.getAllFromDB()
+    const filters = pick(req.query, scheduleFilters);
+    const options = pick(req.query, scheduleOptionFilters);
+    const result = await scheduleService.getAllFromDB(filters, options)
     sendResponse(res, {
         statusCode: status.OK,
         success: true,

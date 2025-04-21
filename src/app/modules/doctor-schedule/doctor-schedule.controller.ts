@@ -3,7 +3,6 @@ import sendResponse from "../../../shared/sentResponse";
 import status from "http-status";
 import catchAsync from "../../../shared/catchAsync";
 import { doctorScheduleService } from "./doctor-schedule.service";
-import { TTokenUser } from "../../interfaces";
 
 const getAllFromDb = catchAsync(async (req: Request, res: Response) => {
     const result = await doctorScheduleService.getAllFromDB()
