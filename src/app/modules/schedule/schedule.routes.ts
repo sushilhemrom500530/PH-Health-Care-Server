@@ -12,6 +12,7 @@ router.get(
 );
 router.post(
     '/create',
+    auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
     scheduleController.insertIntoDB
 );
 

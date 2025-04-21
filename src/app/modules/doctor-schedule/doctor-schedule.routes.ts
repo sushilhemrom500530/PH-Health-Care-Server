@@ -7,11 +7,12 @@ const router = express.Router();
 
 router.get(
     '/',
-    auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
+    auth(UserRole.DOCTOR),
     doctorScheduleController.getAllFromDb
 );
 router.post(
     '/create',
+    auth(UserRole.DOCTOR),
     doctorScheduleController.insertIntoDB
 );
 

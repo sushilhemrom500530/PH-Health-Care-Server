@@ -3,6 +3,7 @@ import sendResponse from "../../../shared/sentResponse";
 import status from "http-status";
 import catchAsync from "../../../shared/catchAsync";
 import { doctorScheduleService } from "./doctor-schedule.service";
+import { TTokenUser } from "../../interfaces";
 
 const getAllFromDb = catchAsync(async (req: Request, res: Response) => {
     const result = await doctorScheduleService.getAllFromDB()
@@ -13,8 +14,10 @@ const getAllFromDb = catchAsync(async (req: Request, res: Response) => {
         data: result
     })
 });
-const insertIntoDB = catchAsync(async (req: Request, res: Response) => {
-    const result = await doctorScheduleService.insertIntoDB(req.body)
+const insertIntoDB = catchAsync(async (req: Request & { user?: any }, res: Response) => {
+    const user = req.user;
+    // console.log({ user })
+    const result = await doctorScheduleService.insertIntoDB(user, req.body)
     sendResponse(res, {
         statusCode: status.OK,
         success: true,
