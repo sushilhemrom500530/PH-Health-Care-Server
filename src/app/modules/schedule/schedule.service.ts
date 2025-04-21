@@ -152,7 +152,17 @@ const insertIntoDB = async (payload: TSchedule): Promise<Schedule[]> => {
     return schedules
 }
 
+const getSingleFromDB = async (id: string) => {
+    const result = await prisma.schedule.findUniqueOrThrow({
+        where: {
+            id
+        }
+    })
+    return result;
+}
+
 export const scheduleService = {
     getAllFromDB,
-    insertIntoDB
+    insertIntoDB,
+    getSingleFromDB
 }

@@ -29,7 +29,19 @@ const insertIntoDB = catchAsync(async (req: Request, res: Response) => {
     })
 });
 
+const getSingleFromDB = catchAsync(async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const result = await scheduleService.getSingleFromDB(id)
+    sendResponse(res, {
+        statusCode: status.OK,
+        success: true,
+        message: "Schedule rettrive successfully",
+        data: result
+    })
+})
+
 export const scheduleController = {
     getAllFromDb,
     insertIntoDB,
+    getSingleFromDB,
 }

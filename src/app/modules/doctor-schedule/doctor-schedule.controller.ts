@@ -33,8 +33,8 @@ const insertIntoDB = catchAsync(async (req: Request & { user?: any }, res: Respo
 });
 const deleteFromDB = catchAsync(async (req: Request & { user?: any }, res: Response) => {
     const user = req.user;
-    // console.log({ user })
-    const result = await doctorScheduleService.deleteFromDB()
+    const { id } = req.params;
+    const result = await doctorScheduleService.deleteFromDB(user as TTokenUser, id)
     sendResponse(res, {
         statusCode: status.OK,
         success: true,

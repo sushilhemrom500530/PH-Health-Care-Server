@@ -4,6 +4,8 @@ import prisma from "../../../shared/prisma";
 import { TTokenUser } from "../../interfaces";
 import { TPaginationOptions } from "../../interfaces/pagination";
 import { TDoctorScheduleFilter } from "./doctor-schedule.interface";
+import apiError from "../../error/apiError";
+import status from "http-status";
 
 const getMySchedule = async (
     filters: TDoctorScheduleFilter,
@@ -100,8 +102,38 @@ const insertIntoDB = async (user: TTokenUser, payload: { scheduleIds: string[] }
     });
     return result;
 }
-const deleteFromDB = async () => {
-    console.log("my schedule delete successfuly")
+const deleteFromDB = async (user: TTokenUser, scheduleId: string) => {
+    const doctorData = await prisma.doctor.findUniqueOrThrow({
+        where: {
+            email: user.email
+        }
+    })
+
+    // console.log({ doctorData })
+
+    const isBookingSchedule = await prisma.doctorSchedules.findFirst({
+        where: {
+            doctorId: doctorData.id,
+            scheduleId: scheduleId,
+            isBooked: true
+        }
+    });
+    // console.log({ isBookingSchedule })
+    if (isBookingSchedule) {
+        console.log("worked but doesn't show-------")
+        throw new apiError(status.BAD_REQUEST, "you can not delete this schedule because of the schedule already booked!")
+    }
+
+    const result = await prisma.doctorSchedules.delete({
+        where: {
+            doctorId_scheduleId: {
+                doctorId: doctorData.id,
+                scheduleId: scheduleId
+            }
+        }
+    });
+    return result;
+
 }
 
 export const doctorScheduleService = {

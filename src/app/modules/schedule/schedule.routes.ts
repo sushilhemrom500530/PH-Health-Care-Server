@@ -10,6 +10,11 @@ router.get(
     auth(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.DOCTOR),
     scheduleController.getAllFromDb
 );
+router.get(
+    '/:id',
+    auth(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.DOCTOR),
+    scheduleController.getSingleFromDB
+);
 router.post(
     '/create',
     auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
