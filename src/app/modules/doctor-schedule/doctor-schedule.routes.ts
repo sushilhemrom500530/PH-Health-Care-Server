@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.get(
     '/',
-    auth(UserRole.DOCTOR),
+    auth(UserRole.SUPER_ADMIN, UserRole.DOCTOR, UserRole.DOCTOR, UserRole.PATIENT),
     doctorScheduleController.getAllFromDB
 );
 router.get(
@@ -28,4 +28,4 @@ router.delete(
 
 
 
-export const doctorScheduleRoute = router;
+export const doctorScheduleRoutes = router;

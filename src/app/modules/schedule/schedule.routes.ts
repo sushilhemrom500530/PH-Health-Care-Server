@@ -27,4 +27,4 @@ router.delete(
 );
 
 
-export const scheduleRoute = router;
+export const scheduleRoutes = router;

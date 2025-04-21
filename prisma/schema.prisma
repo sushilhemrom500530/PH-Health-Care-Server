@@ -66,7 +66,7 @@ model Doctor {
   user               User                 @relation(fields: [email], references: [email])
   doctorSpecialities DoctorSpecialities[]
   doctorSchedules    DoctorSchedules[]
-  Appointment        Appointment[]
+  appointment        Appointment[]
 
   @@map("doctors")
 }
@@ -93,7 +93,7 @@ model Patient {
   user              User               @relation(fields: [email], references: [email])
   patientHealthData PatientHealthData?
   medicalReport     MedicalReport[]
-  Appointment       Appointment[]
+  appointment       Appointment[]
 
   @@map("patients")
 }
@@ -163,7 +163,7 @@ model Schedule {
   updatedAt     DateTime @updatedAt
 
   doctorSchedules DoctorSchedules[]
-  Appointment     Appointment?
+  appointment     Appointment?
 
   @@map("schedules")
 }
