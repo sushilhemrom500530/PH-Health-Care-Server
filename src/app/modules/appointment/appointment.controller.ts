@@ -8,7 +8,7 @@ import pick from "../../../shared/pick";
 import { appointmentFilters, appointmentOptions } from "./appointment.constant";
 
 const getAllFromDB = catchAsync(async (req: Request & { user?: TTokenUser }, res: Response) => {
-
+    // home work 
     const result = await appointmentService.getAllFromDB
     sendResponse(res, {
         statusCode: status.OK,

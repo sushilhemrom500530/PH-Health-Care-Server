@@ -8,13 +8,21 @@ const router = express.Router();
 router.post(
     '/create',
     auth(UserRole.PATIENT),
+    // apply jod validation here (HOME WORK)
     appointmentController.insertIntoDB
-)
+);
+
 router.get(
     '/my-appointment',
     auth(UserRole.DOCTOR, UserRole.PATIENT),
     appointmentController.myAppointment
-)
+);
+
+router.get(
+    '/',
+    auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
+    appointmentController.getAllFromDB
+);
 
 
 export const appointmentRouters = router;
