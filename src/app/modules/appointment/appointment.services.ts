@@ -6,7 +6,7 @@ const getAllFromDB = async (user: TTokenUser, payload: any) => {
 
 }
 const insertIntoDB = async (user: TTokenUser, payload: any) => {
-    console.log('appointment created successfully', { payload });
+    // console.log('appointment created successfully', { payload });
     const patientData = await prisma.patient.findUniqueOrThrow({
         where: {
             email: user.email
@@ -59,6 +59,20 @@ const insertIntoDB = async (user: TTokenUser, payload: any) => {
                 appointmentId: appointmentData.id
             }
         })
+
+        // PH-HealthCare-datatime
+        const today = new Date();
+
+        const transactionId = "PH-HealthCare-" + today.getFullYear() + "-" + today.getMonth() + "-" + today.getDay() + "-" + today.getHours() + "-" + today.getMinutes();
+
+        await tx.payment.create({
+            data: {
+                appointmentId: appointmentData.id,
+                amount: doctorData.appointmentFee,
+                transactionId
+            }
+        })
+
         return appointmentData;
     })
     return result;

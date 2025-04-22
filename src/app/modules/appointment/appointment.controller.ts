@@ -17,7 +17,7 @@ const getAllFromDB = catchAsync(async (req: Request & { user?: TTokenUser }, res
 });
 const insertIntoDB = catchAsync(async (req: Request & { user?: TTokenUser }, res: Response) => {
     const user = req.user;
-    console.log({ user })
+    // console.log({ user })
     const result = await appointmentService.insertIntoDB(user as TTokenUser, req.body)
     sendResponse(res, {
         statusCode: status.OK,
