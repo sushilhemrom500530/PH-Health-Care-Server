@@ -12,7 +12,7 @@ router.post(
 )
 router.get(
     '/my-appointment',
-    auth(UserRole.PATIENT),
+    auth(UserRole.DOCTOR, UserRole.PATIENT),
     appointmentController.myAppointment
 )
 
