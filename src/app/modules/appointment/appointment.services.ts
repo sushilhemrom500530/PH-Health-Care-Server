@@ -1,15 +1,65 @@
 import prisma from "../../../shared/prisma";
 import { TTokenUser } from "../../interfaces"
 import { v4 as uuidv4 } from 'uuid';
+import { TPaginationOptions } from "../../interfaces/pagination";
+import calculatePagination from "../../../helpers/paginationHelper";
+import { Prisma } from "@prisma/client";
 
 const getAllFromDB = async (user: TTokenUser, payload: any) => {
 
 }
-const getMyAppointment = async (user: TTokenUser, filters: any, options: any) => {
-    const result = {
-        message: "ok fine"
+const getMyAppointment = async (user: TTokenUser, filters: any, options: TPaginationOptions) => {
+    const { limit, page, skip } = calculatePagination(options);
+    const { startDate, endDate, ...filterData } = filters;
+
+    const andConditions: Prisma.AppointmentWhereInput[] = [];
+
+
+
+
+    if (Object.keys(filterData).length > 0) {
+        andConditions.push({
+            AND: Object.keys(filterData).map(key => {
+                return {
+                    [key]: {
+                        equals: (filterData as any)[key],
+                    },
+                };
+            }),
+        });
     }
-    return result;
+
+    const whereConditions: Prisma.AppointmentWhereInput =
+        andConditions.length > 0 ? { AND: andConditions } : {};
+
+
+    const result = await prisma.appointment.findMany({
+        where: whereConditions,
+        skip,
+        take: limit,
+        orderBy:
+            options.sortBy && options.sortOrder
+                ? { [options.sortBy]: options.sortOrder }
+                : {
+                    createdAt: 'desc',
+                },
+        include: {
+            doctor: true,
+            schedule: true
+        }
+    });
+    const total = await prisma.appointment.count({
+        where: whereConditions,
+    });
+
+    return {
+        meta: {
+            total,
+            page,
+            limit,
+        },
+        data: result,
+    };
 }
 
 const insertIntoDB = async (user: TTokenUser, payload: any) => {
