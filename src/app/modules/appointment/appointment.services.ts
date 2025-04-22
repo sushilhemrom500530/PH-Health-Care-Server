@@ -5,6 +5,13 @@ import { v4 as uuidv4 } from 'uuid';
 const getAllFromDB = async (user: TTokenUser, payload: any) => {
 
 }
+const getMyAppointment = async (user: TTokenUser, filters: any, options: any) => {
+    const result = {
+        message: "ok fine"
+    }
+    return result;
+}
+
 const insertIntoDB = async (user: TTokenUser, payload: any) => {
     // console.log('appointment created successfully', { payload });
     const patientData = await prisma.patient.findUniqueOrThrow({
@@ -80,5 +87,6 @@ const insertIntoDB = async (user: TTokenUser, payload: any) => {
 
 export const appointmentService = {
     getAllFromDB,
+    getMyAppointment,
     insertIntoDB
 }

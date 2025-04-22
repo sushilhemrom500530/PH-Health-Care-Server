@@ -10,6 +10,11 @@ router.post(
     auth(UserRole.PATIENT),
     appointmentController.insertIntoDB
 )
+router.get(
+    '/my-appointment',
+    auth(UserRole.PATIENT),
+    appointmentController.myAppointment
+)
 
 
 export const appointmentRouters = router;
