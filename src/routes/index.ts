@@ -1,3 +1,4 @@
+import { paymentRoutes } from './../app/modules/payment/payment.routes';
 import express from "express";
 import { userRoutes } from "../app/modules/user/user.routes";
 import { adminRoutes } from "../app/modules/admin/admin.routes";
@@ -47,6 +48,10 @@ const modulesRoute = [
     {
         path: "/appointment",
         route: appointmentRouters
+    },
+    {
+        path: "/payment",
+        route: paymentRoutes
     },
 ]
 
