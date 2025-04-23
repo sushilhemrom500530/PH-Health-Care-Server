@@ -5,7 +5,8 @@ import sendResponse from "../../../shared/sentResponse";
 
 
 const initiatePayment =catchAsync(async (req: Request, res: Response) => {
-    const result = await paymentService.initiatePayment();
+    const {appointmentId}  = req.params;
+    const result = await paymentService.initiatePayment(appointmentId);
     sendResponse(res, {
         statusCode: status.OK,
         success: true,
@@ -14,6 +15,17 @@ const initiatePayment =catchAsync(async (req: Request, res: Response) => {
     })
 });
 
+const validatePayment = catchAsync(async (req: Request, res: Response) => {
+    const result = await paymentService.validatePayment(req.query);
+    sendResponse(res, {
+        statusCode: status.OK,
+        success: true,
+        message: "Payment Validate successfully",
+        data: result
+    })
+});
+
 export const paymentController = {
     initiatePayment,
+    validatePayment
 }
