@@ -3,7 +3,7 @@ import express from "express";
 import { userRoutes } from "../app/modules/user/user.routes";
 import { adminRoutes } from "../app/modules/admin/admin.routes";
 import { authRoutes } from "../app/modules/auth/auth.routes";
-import { specialitiesRoutes } from "../app/modules/specialities/specialities.routes";
+import { specialtiesRoutes } from "../app/modules/specialties/specialties.routes";
 import { doctorRoutes } from "../app/modules/doctor/doctor.routes";
 import { patientRoutes } from "../app/modules/patient/patient.routes";
 import { scheduleRoutes } from "../app/modules/schedule/schedule.routes";
@@ -26,8 +26,8 @@ const modulesRoute = [
         route: authRoutes
     },
     {
-        path: "/specialities",
-        route: specialitiesRoutes
+        path: "/specialties",
+        route: specialtiesRoutes
     },
     {
         path: "/doctor",

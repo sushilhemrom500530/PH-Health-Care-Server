@@ -4,7 +4,7 @@ import { fileUploader } from "../../../helpers/fileUploader";
 import prisma from "../../../shared/prisma";
 
 const getAllFromDb = async () => {
-    const result = await prisma.specialities.findMany();
+    const result = await prisma.specialties.findMany();
     return result;
 };
 
@@ -15,7 +15,7 @@ const insertIntoDB = async (req: Request) => {
         req.body.icon = uploadToCloudinary?.secure_url
     }
 
-    const result = await prisma.specialities.create({
+    const result = await prisma.specialties.create({
         data: req.body
     })
     return result;
@@ -23,7 +23,7 @@ const insertIntoDB = async (req: Request) => {
 
 const getSingleData = async (id: string) => {
 
-    const result = await prisma.specialities.findUnique({
+    const result = await prisma.specialties.findUnique({
         where: {
             id
         }
@@ -31,9 +31,9 @@ const getSingleData = async (id: string) => {
     return result;
 };
 
-const deleteSpecialities = async (id: string) => {
+const deleteSpecialties = async (id: string) => {
 
-    const result = await prisma.specialities.delete({
+    const result = await prisma.specialties.delete({
         where: {
             id
         }
@@ -41,9 +41,9 @@ const deleteSpecialities = async (id: string) => {
     return result;
 };
 
-export const specialitiesService = {
+export const specialtiesService = {
     insertIntoDB,
     getSingleData,
-    deleteSpecialities,
+    deleteSpecialties,
     getAllFromDb
 }

@@ -6,6 +6,6 @@ const create = z.object({
     })
 });
 
-export const specialitiesValidation = {
+export const specialtiesValidation = {
     create
 }

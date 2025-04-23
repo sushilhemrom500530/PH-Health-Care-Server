@@ -1,26 +1,26 @@
 import status from "http-status";
 import sendResponse from "../../../shared/sentResponse";
-import { specialitiesService } from "./specialities.service";
+import { specialtiesService } from "./specialties.service";
 import { Request, Response } from "express";
 import { TFile } from "../../interfaces/file";
 
 const getAllFromDb = async (req: Request, res: Response) => {
-    const result = await specialitiesService.getAllFromDb();
+    const result = await specialtiesService.getAllFromDb();
 
     sendResponse(res, {
         statusCode: status.OK,
         success: true,
-        message: "Specialities fetched successfully",
+        message: "Specialties fetched successfully",
         data: result
     })
 };
 const insertIntoDB = async (req: Request, res: Response) => {
-    const result = await specialitiesService.insertIntoDB(req);
+    const result = await specialtiesService.insertIntoDB(req);
 
     sendResponse(res, {
         statusCode: status.OK,
         success: true,
-        message: "Specialities created successfully",
+        message: "Specialties created successfully",
         data: result
     })
 };
@@ -28,32 +28,32 @@ const insertIntoDB = async (req: Request, res: Response) => {
 const getSingleData = async (req: Request, res: Response) => {
     const { id } = req.params;
     // console.log({ id })
-    const result = await specialitiesService.getSingleData(id);
+    const result = await specialtiesService.getSingleData(id);
 
     sendResponse(res, {
         statusCode: status.OK,
         success: true,
-        message: "Specialities rettrive successfully",
+        message: "Specialties retrieve successfully",
         data: result
     })
 };
 
-const deleteSpecialities = async (req: Request, res: Response) => {
+const deleteSpecialties = async (req: Request, res: Response) => {
     const { id } = req.params;
     // console.log({ id })
-    const result = await specialitiesService.deleteSpecialities(id);
+    const result = await specialtiesService.deleteSpecialties(id);
 
     sendResponse(res, {
         statusCode: status.OK,
         success: true,
-        message: "Specialities deleted successfully",
+        message: "Specialties deleted successfully",
         data: result
     })
 };
 
-export const specialitiesController = {
+export const specialtiesController = {
     insertIntoDB,
     getSingleData,
-    deleteSpecialities,
+    deleteSpecialties,
     getAllFromDb
 }

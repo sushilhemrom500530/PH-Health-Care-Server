@@ -1,24 +1,24 @@
 import express, { NextFunction, Request, Response } from "express";
 import auth from "../../middlewares/auth";
 import { UserRole } from "@prisma/client";
-import { specialitiesController } from "./specialities.controller";
+import { specialtiesController } from "./specialties.controller";
 import { fileUploader } from "../../../helpers/fileUploader";
-import { specialitiesValidation } from "./specialities.validation";
+import { specialtiesValidation } from "./specialties.validation";
 
 const router = express.Router();
 
 router.get(
     '/',
     auth(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.DOCTOR),
-    specialitiesController.getAllFromDb
+    specialtiesController.getAllFromDb
 );
 
 router.post('/create',
     auth(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.DOCTOR),
     fileUploader.upload.single('file'),
     (req: Request, res: Response, next: NextFunction) => {
-        req.body = specialitiesValidation.create.parse(JSON.parse(req.body.data))
-        return specialitiesController.insertIntoDB(req, res)
+        req.body = specialtiesValidation.create.parse(JSON.parse(req.body.data))
+        return specialtiesController.insertIntoDB(req, res)
     },
 );
 
@@ -28,15 +28,15 @@ router.post('/create',
 router.get(
     '/:id',
     auth(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.DOCTOR),
-    specialitiesController.getSingleData
+    specialtiesController.getSingleData
 );
 router.delete(
     '/:id',
     auth(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.DOCTOR),
-    specialitiesController.deleteSpecialities
+    specialtiesController.deleteSpecialties
 );
 
 
 
 
-export const specialitiesRoutes = router;
+export const specialtiesRoutes = router;
