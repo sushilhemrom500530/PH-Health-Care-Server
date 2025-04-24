@@ -25,20 +25,38 @@ const insertIntoDB = async (user:TTokenUser,payload:any) => {
         id:payload.appointmentId
     }
   })
-  console.log({patientData,appointmentData});
+//   console.log({patientData,appointmentData});
     if (!(patientData.id === appointmentData.patientId)) {
         throw new apiError(status, "This is not your appointment!")
     }
-    const result = await prisma.review.create({
-        data:{
-            appointmentId:appointmentData.id,
-            doctorId:appointmentData.doctorId,
-            patientId:appointmentData.patientId,
-            rating:payload.rating,
-            comment:payload.comment
-        }
-    });
-    return result;
+    return await prisma.$transaction(async (tx) => {
+        const result = await tx.review.create({
+            data: {
+                appointmentId: appointmentData.id,
+                doctorId: appointmentData.doctorId,
+                patientId: appointmentData.patientId,
+                rating: payload.rating,
+                comment: payload.comment
+            }
+        });
+
+        const averageRating = await tx.review.aggregate({
+            _avg: {
+                rating: true
+            }
+        });
+
+        await tx.doctor.update({
+            where: {
+                id: result.doctorId
+            },
+            data: {
+                averageRating: averageRating._avg.rating as number
+            }
+        })
+
+        return result;
+    })
 }
 
 
