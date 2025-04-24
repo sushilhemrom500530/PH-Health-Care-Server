@@ -18,12 +18,13 @@ const getAllFromDB = catchAsync(async (req: Request & { user?: TTokenUser }, res
     })
 });
 const insertIntoDB = catchAsync(async (req: Request & { user?: TTokenUser }, res: Response) => {
-  
+    const user = req.user;
+    const result = await prescriptionService.insertIntoDB(user as TTokenUser,req.body)
     sendResponse(res, {
         statusCode: status.OK,
         success: true,
-        message: "Prescription Created successfully",
-        data: null
+        message: "Prescription created successfully",
+        data: result
     })
 });
 

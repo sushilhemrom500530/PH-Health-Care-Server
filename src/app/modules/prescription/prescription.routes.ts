@@ -11,6 +11,7 @@ router.get(
 );
 router.post(
     '/',
+    auth(UserRole.DOCTOR),
     prescriptionController.insertIntoDB
 );
 
