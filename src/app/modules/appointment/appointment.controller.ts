@@ -61,9 +61,10 @@ const deleteFromDB = catchAsync(async (req: Request, res: Response) => {
     })
 });
 
-const changeAppointmentStatus = catchAsync(async (req: Request, res: Response) => {
+const changeAppointmentStatus = catchAsync(async (req: Request & {user?:TTokenUser}, res: Response) => {
     const {id} = req.params;
-    const result = await appointmentService.changeAppointmentStatus(id,req.body);
+    const user = req.user;
+    const result = await appointmentService.changeAppointmentStatus(id,req.body, user as TTokenUser);
     sendResponse(res, {
         statusCode: status.OK,
         success: true,

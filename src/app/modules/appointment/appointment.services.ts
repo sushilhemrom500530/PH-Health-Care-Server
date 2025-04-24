@@ -3,7 +3,7 @@ import { TTokenUser } from "../../interfaces"
 import { v4 as uuidv4 } from 'uuid';
 import { TPaginationOptions } from "../../interfaces/pagination";
 import calculatePagination from "../../../helpers/paginationHelper";
-import { Prisma, UserRole,AppointmentStatus } from "@prisma/client";
+import { Prisma, UserRole,AppointmentStatus,PaymentStatus } from "@prisma/client";
 
 const getAllFromDB = async (user: TTokenUser, payload: any) => {
 
@@ -157,7 +157,7 @@ const insertIntoDB = async (user: TTokenUser, payload: any) => {
     return result;
 }
 
-const changeAppointmentStatus =async (appointmentId:string,payload:AppointmentStatus)=>{
+const changeAppointmentStatus =async (appointmentId:string,payload:AppointmentStatus,user:TTokenUser)=>{
     const {status} =payload;
     const appointmentData = await prisma.appointment.findUniqueOrThrow({
         where: {
@@ -167,7 +167,13 @@ const changeAppointmentStatus =async (appointmentId:string,payload:AppointmentSt
             doctor: true
         }
     });
-    console.log({status})
+
+    if (user?.role === UserRole.DOCTOR) {
+        if (!(user.email === appointmentData.doctor.email)) {
+            throw new ApiError(status.BAD_REQUEST, "This is not your appointment!")
+        }
+    }
+
     const result = await prisma.appointment.update({
         where: {
             id: appointmentId
@@ -180,9 +186,24 @@ const changeAppointmentStatus =async (appointmentId:string,payload:AppointmentSt
     return result;
 }
 
+const cancelUnpaidAppointments = async()=>{
+    const thirtyMinAgo = new Date(Date.now() - 30 * 60 * 1000)
+
+    const unPaidAppointments = await prisma.appointment.findMany({
+        where: {
+            createdAt: {
+                lte: thirtyMinAgo
+            },
+            paymentStatus: PaymentStatus.UNPAID
+        },
+    });
+    // console.log(unPaidAppointments)
+}
+
 export const appointmentService = {
     getAllFromDB,
     getMyAppointment,
     insertIntoDB,
-    changeAppointmentStatus
+    changeAppointmentStatus,
+    cancelUnpaidAppointments
 }
