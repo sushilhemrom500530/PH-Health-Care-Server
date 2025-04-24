@@ -28,9 +28,24 @@ const insertIntoDB = catchAsync(async (req: Request & { user?: TTokenUser }, res
     })
 });
 
+const patientPrescription = catchAsync(async (req: Request & { user?: TTokenUser }, res: Response) => {
+    const user = req.user;
+    const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder'])
+    const result = await prescriptionService.patientPrescription(user as TTokenUser,options)
+    sendResponse(res, {
+        statusCode: status.OK,
+        success: true,
+        message: "Patient Prescription fetched successfully",
+        meta:result.meta,
+        data: result.data
+    })
+});
+
 
 
 export const prescriptionController = {
     getAllFromDB,
     insertIntoDB,
+    patientPrescription,
+
 }
