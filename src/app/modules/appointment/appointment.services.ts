@@ -157,8 +157,13 @@ const insertIntoDB = async (user: TTokenUser, payload: any) => {
     return result;
 }
 
+const changeAppointmentStatus =async ()=>{
+    console.log('change appointment status')
+}
+
 export const appointmentService = {
     getAllFromDB,
     getMyAppointment,
-    insertIntoDB
+    insertIntoDB,
+    changeAppointmentStatus
 }

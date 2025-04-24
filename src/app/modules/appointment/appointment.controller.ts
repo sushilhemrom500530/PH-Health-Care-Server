@@ -59,6 +59,16 @@ const deleteFromDB = catchAsync(async (req: Request, res: Response) => {
         message: "Schedule deleted successfully",
         data: result
     })
+});
+
+const changeAppointmentStatus = catchAsync(async (req: Request, res: Response) => {
+    const result = await appointmentService.changeAppointmentStatus()
+    sendResponse(res, {
+        statusCode: status.OK,
+        success: true,
+        message: "Change Appointment status successfully",
+        data: result
+    })
 })
 
 export const appointmentController = {
@@ -66,5 +76,6 @@ export const appointmentController = {
     myAppointment,
     insertIntoDB,
     getSingleFromDB,
-    deleteFromDB
+    deleteFromDB,
+    changeAppointmentStatus
 }

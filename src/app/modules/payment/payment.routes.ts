@@ -3,7 +3,7 @@ import { paymentController } from './payment.controller';
 
 const router = express.Router();
 
-router.post(
+router.get(
     '/ipn',
     paymentController.validatePayment
 )
