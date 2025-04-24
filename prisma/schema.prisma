@@ -238,7 +238,7 @@ model Review {
   appointmentId String      @unique
   appointment   Appointment @relation(fields: [appointmentId], references: [id])
 
-  rating    String
+  rating    Float
   comment   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
