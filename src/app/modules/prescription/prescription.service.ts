@@ -49,7 +49,6 @@ const insertIntoDB = async (user: TTokenUser,payload:any) => {
     return result;
 }
 
-
 const patientPrescription = async(user:TTokenUser,options:TPaginationOptions)=>{
     const { limit, page, skip } = calculatePagination(options);
 
