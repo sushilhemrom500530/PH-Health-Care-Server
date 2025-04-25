@@ -3,7 +3,7 @@ import { TTokenUser } from "../../interfaces"
 import { v4 as uuidv4 } from 'uuid';
 import { TPaginationOptions } from "../../interfaces/pagination";
 import calculatePagination from "../../../helpers/paginationHelper";
-import { Prisma, UserRole,AppointmentStatus,PaymentStatus,Prescription } from "@prisma/client";
+import { UserRole,AppointmentStatus,PaymentStatus,Prescription } from "@prisma/client";
 import apiError from './../../error/apiError';
 import { status } from 'http-status';
 
@@ -18,7 +18,7 @@ const dashboardMetaData = async (user:TTokenUser) => {
                 getAdminMetaData();
                 break;
             case UserRole.DOCTOR:
-                getDoctorMetaData();
+                getDoctorMetaData(user as TTokenUser);
                 break;
             case UserRole.PATIENT:
                 getPatientMetaData();
@@ -39,24 +39,43 @@ const getAdminMetaData = async (req: Request , res: Response) => {
     const patientCount = await prisma.patient.count();
     const doctorCount = await prisma.doctor.count();
     const paymentCount = await prisma.payment.count();
+
     const totalRevenue = await prisma.payment.aggregate({
         _sum: { amount: true },
         where: {
             status: PaymentStatus.PAID
         }
     });
+    console.log(appointmentCount,patientCount, doctorCount, paymentCount,totalRevenue);
 
-    const barChartData = await getBarChartData();
-    const pieCharData = await getPieChartData();
+    // const barChartData = await getBarChartData();
+    // const pieCharData = await getPieChartData();
 
-    return { appointmentCount, patientCount, doctorCount, paymentCount, totalRevenue, barChartData, pieCharData }
+    // return { appointmentCount, patientCount, doctorCount, paymentCount, totalRevenue, barChartData, pieCharData }
 };
 
-const getDoctorMetaData =async (req: Request , res: Response) => {
-    console.log("meta data for Doctor");
+const getDoctorMetaData =async (user:TTokenUser) => {
+    const doctorData = await prisma.doctor.findUniqueOrThrow({
+        where: {
+            email: user?.email
+        }
+    });
+
+    const appointmentCount = await prisma.appointment.count({
+        where: {
+            doctorId: doctorData.id
+        }
+    });
+
+    const patientCount = await prisma.appointment.groupBy({
+        by: ['patientId'],
+        _count: {
+            id: true
+        }
+    });
 };
 
-const getPatientMetaData = async (req: Request , res: Response) => {
+const getPatientMetaData = async () => {
     console.log("meta data for Patient");
 };
 
