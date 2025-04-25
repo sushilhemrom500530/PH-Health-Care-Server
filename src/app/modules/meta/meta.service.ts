@@ -10,7 +10,6 @@ import { status } from 'http-status';
 
 
 const dashboardMetaData = async (user:TTokenUser) => {
-    console.log("meta data",user);
     switch (user.role) {
         case UserRole.SUPER_ADMIN:
             getSuperAdminMetaData();
@@ -26,24 +25,39 @@ const dashboardMetaData = async (user:TTokenUser) => {
                 break;
     
         default:
-            break;
+            throw new Error("Invalid user role!");
+            
     }
 }
 
 const getSuperAdminMetaData = async (req: Request , res: Response) => {
-     
+    console.log("meta data for Super Admin");
 };
 
 const getAdminMetaData = async (req: Request , res: Response) => {
-    
+    const appointmentCount = await prisma.appointment.count();
+    const patientCount = await prisma.patient.count();
+    const doctorCount = await prisma.doctor.count();
+    const paymentCount = await prisma.payment.count();
+    const totalRevenue = await prisma.payment.aggregate({
+        _sum: { amount: true },
+        where: {
+            status: PaymentStatus.PAID
+        }
+    });
+
+    const barChartData = await getBarChartData();
+    const pieCharData = await getPieChartData();
+
+    return { appointmentCount, patientCount, doctorCount, paymentCount, totalRevenue, barChartData, pieCharData }
 };
 
 const getDoctorMetaData =async (req: Request , res: Response) => {
-    
+    console.log("meta data for Doctor");
 };
 
 const getPatientMetaData = async (req: Request , res: Response) => {
-   
+    console.log("meta data for Patient");
 };
 
 
