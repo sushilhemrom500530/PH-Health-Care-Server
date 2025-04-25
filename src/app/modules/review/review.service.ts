@@ -25,11 +25,11 @@ const insertIntoDB = async (user:TTokenUser,payload:any) => {
         id:payload.appointmentId
     }
   })
-//   console.log({patientData,appointmentData});
+  console.log({patientData,appointmentData});
     if (!(patientData.id === appointmentData.patientId)) {
         throw new apiError(status, "This is not your appointment!")
     }
-    return await prisma.$transaction(async (tx) => {
+ return await prisma.$transaction(async (tx) => {
         const result = await tx.review.create({
             data: {
                 appointmentId: appointmentData.id,
