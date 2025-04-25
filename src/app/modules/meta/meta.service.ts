@@ -10,31 +10,49 @@ import { status } from 'http-status';
 
 
 const dashboardMetaData = async (user:TTokenUser) => {
+    let metaData;
     switch (user.role) {
         case UserRole.SUPER_ADMIN:
-            getSuperAdminMetaData();
+            metaData = getSuperAdminMetaData();
             break;
             case UserRole.ADMIN:
-                getAdminMetaData();
+                metaData = getAdminMetaData();
                 break;
             case UserRole.DOCTOR:
-                getDoctorMetaData(user as TTokenUser);
+                metaData = getDoctorMetaData(user as TTokenUser);
                 break;
             case UserRole.PATIENT:
-                getPatientMetaData(user as TTokenUser);
+                metaData = getPatientMetaData(user as TTokenUser);
                 break;
     
         default:
             throw new Error("Invalid user role!");
-            
-    }
+     }
+     return metaData;
 }
 
-const getSuperAdminMetaData = async (req: Request , res: Response) => {
-    console.log("meta data for Super Admin");
+const getSuperAdminMetaData = async () => {
+    const appointmentCount = await prisma.appointment.count();
+    const patientCount = await prisma.patient.count();
+    const doctorCount = await prisma.doctor.count();
+    const adminCount = await prisma.admin.count();
+    const paymentCount = await prisma.payment.count();
+
+    const totalRevenue = await prisma.payment.aggregate({
+        _sum: { amount: true },
+        where: {
+            status: PaymentStatus.PAID
+        }
+    });
+
+    const barChartData = await getBarChartData();
+    const pieCharData = await getPieChartData();
+    console.log({appointmentCount, patientCount, doctorCount, adminCount, paymentCount, totalRevenue, barChartData, pieCharData});
+
+    return { appointmentCount, patientCount, doctorCount, adminCount, paymentCount, totalRevenue, barChartData, pieCharData }
 };
 
-const getAdminMetaData = async (req: Request , res: Response) => {
+const getAdminMetaData = async () => {
     const appointmentCount = await prisma.appointment.count();
     const patientCount = await prisma.patient.count();
     const doctorCount = await prisma.doctor.count();
@@ -52,6 +70,7 @@ const getAdminMetaData = async (req: Request , res: Response) => {
     // const pieCharData = await getPieChartData();
 
     // return { appointmentCount, patientCount, doctorCount, paymentCount, totalRevenue, barChartData, pieCharData }
+    return { appointmentCount, patientCount, doctorCount, paymentCount, totalRevenue}
 };
 
 const getDoctorMetaData =async (user:TTokenUser) => {
