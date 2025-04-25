@@ -21,7 +21,7 @@ const dashboardMetaData = async (user:TTokenUser) => {
                 getDoctorMetaData(user as TTokenUser);
                 break;
             case UserRole.PATIENT:
-                getPatientMetaData();
+                getPatientMetaData(user as TTokenUser);
                 break;
     
         default:
@@ -115,8 +115,50 @@ const getDoctorMetaData =async (user:TTokenUser) => {
     }
 };
 
-const getPatientMetaData = async () => {
-    console.log("meta data for Patient");
+const getPatientMetaData = async (user:TTokenUser) => {
+    const patientData = await prisma.patient.findUniqueOrThrow({
+        where: {
+            email: user?.email
+        }
+    });
+
+    const appointmentCount = await prisma.appointment.count({
+        where: {
+            patientId: patientData.id
+        }
+    });
+
+    const prescriptionCount = await prisma.prescription.count({
+        where: {
+            patientId: patientData.id
+        }
+    });
+
+    const reviewCount = await prisma.review.count({
+        where: {
+            patientId: patientData.id
+        }
+    });
+
+    const appointmentStatusDistribution = await prisma.appointment.groupBy({
+        by: ['status'],
+        _count: { id: true },
+        where: {
+            patientId: patientData.id
+        }
+    });
+
+    const formattedAppointmentStatusDistribution = appointmentStatusDistribution.map(({ status, _count }) => ({
+        status,
+        count: Number(_count.id)
+    }))
+
+    return {
+        appointmentCount,
+        prescriptionCount,
+        reviewCount,
+        formattedAppointmentStatusDistribution
+    }
 };
 
 
