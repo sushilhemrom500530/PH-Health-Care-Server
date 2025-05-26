@@ -10,6 +10,7 @@ import { status } from 'http-status';
 
 
 const dashboardMetaData = async (user:TTokenUser) => {
+    console.log({user});
     let metaData;
     switch (user.role) {
         case UserRole.SUPER_ADMIN:
@@ -32,6 +33,7 @@ const dashboardMetaData = async (user:TTokenUser) => {
 }
 
 const getSuperAdminMetaData = async () => {
+    console.log("Super admin fetched successfully");
     const appointmentCount = await prisma.appointment.count();
     const patientCount = await prisma.patient.count();
     const doctorCount = await prisma.doctor.count();
@@ -45,11 +47,19 @@ const getSuperAdminMetaData = async () => {
         }
     });
 
-    const barChartData = await getBarChartData();
-    const pieCharData = await getPieChartData();
-    console.log({appointmentCount, patientCount, doctorCount, adminCount, paymentCount, totalRevenue, barChartData, pieCharData});
+    // const barChartData = await getBarChartData();
+    // const pieCharData = await getPieChartData();
 
-    return { appointmentCount, patientCount, doctorCount, adminCount, paymentCount, totalRevenue, barChartData, pieCharData }
+    return { 
+        appointmentCount, 
+        patientCount,
+        doctorCount, 
+        adminCount, 
+        paymentCount, 
+        totalRevenue,
+        // barChartData, 
+        // pieCharData 
+        }
 };
 
 const getAdminMetaData = async () => {

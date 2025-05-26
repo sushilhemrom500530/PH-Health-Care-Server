@@ -18,14 +18,14 @@ app.use(cookieParser())
 app.use(express.urlencoded({ extended: true }));
 
 
-cron.schedule('* * * * *', () => {
-    try {
-        appointmentService.cancelUnpaidAppointments();
-    }
-    catch (err) {
-        console.error(err);
-    }
-});
+// cron.schedule('* * * * *', () => {
+//     try {
+//         appointmentService.cancelUnpaidAppointments();
+//     }
+//     catch (err) {
+//         console.error(err);
+//     }
+// });
 
 app.get('/', (req: Request, res: Response) => {
     res.send({
