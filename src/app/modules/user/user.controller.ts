@@ -10,7 +10,7 @@ import { TTokenUser } from "../../interfaces";
 
 const createAdmin = async (req: Request, res: Response) => {
     try {
-        // console.log(req.body)
+        console.log(req.body)
         const result = await userService.createAdmin(req);
         res.status(200).json({
             seccess: true,
